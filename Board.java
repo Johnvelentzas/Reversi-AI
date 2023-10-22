@@ -2,6 +2,8 @@ import java.util.ArrayList;
 
 class Board
 {
+    //hello
+    //Another comment
 	public static final int W = 1;
     public static final int B = -1;
     public static final int EMPTY = 0;
