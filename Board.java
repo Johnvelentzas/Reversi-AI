@@ -2,8 +2,6 @@ import java.util.ArrayList;
 
 class Board
 {
-    //hello
-    //Another comment
 	public static final int W = 1;
     public static final int B = -1;
     public static final int EMPTY = 0;
@@ -16,10 +14,26 @@ class Board
 	
 	private int dimension;
 	
-	public Board() {}
+    /**
+     * Basic board constructor. Creates an {@code empty} board with the given dimentions
+     * @param dim   x and y dimention.
+     */
+	public Board(int dim) {
+        this.dimension = dim;
+        this.gameBoard = new int[dim][dim];
+        for (int i = 0; i < this.dimension; i++) {
+            for (int j = 0; j < this.dimension; j++) {
+                this.gameBoard[i][j] = EMPTY;
+            }
+        }
+    }
 	
 	// copy constructor
-    public Board(Board board) {}
+    public Board(Board board) {
+        this.dimension = board.dimension;
+        this.gameBoard = new int[this.dimension][this.dimension];
+        this.setGameBoard(board.gameBoard);
+    }
 	
 	public void print() {}
 	
