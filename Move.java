@@ -1,3 +1,8 @@
+/**
+ * This class represents a move in a board game
+ * where a move consists of the placement of a piece
+ * (represented by an Integer value) in a grid (board)
+ */
 public class Move
 {
     private int row;
@@ -24,6 +29,13 @@ public class Move
         this.col = -1;
         this.value = value;
     }
+
+    /**
+     * Creates a move object with row, column and value attributes.
+     * @param row Int value of the column
+     * @param col Int value of the row
+     * @param value Int value to be given to the board square determined by the row and column atributes
+     */
 
     Move(int row, int col, int value)
     {
