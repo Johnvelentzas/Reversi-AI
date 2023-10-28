@@ -12,6 +12,10 @@ class Board
     public static final int B = -1;
     public static final int EMPTY = 0;
 
+    public static final String WHITE = "W";
+    public static final String BLACK = "B";
+    public static final String UNDEFINED = "?";
+
     private int[][] gameBoard;
 
     private int lastPlayer;
@@ -126,7 +130,21 @@ class Board
         for (int i = 0; i < gameBoard.length; i++) {
             result += "      " + i + "|";
             for (int j = 0; j < gameBoard.length; j++) {
-                result += this.gameBoard[i][j] + "|";
+                switch (this.gameBoard[i][j]) {
+                    case EMPTY:
+                        result += " ";
+                        break;
+                    case B:
+                        result += BLACK;
+                        break;
+                    case W:
+                        result += WHITE;
+                        break;
+                    default:
+                        result += UNDEFINED;
+                        break;
+                }
+                result += "|";
             }
             result += "\n";
         }
