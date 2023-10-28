@@ -118,6 +118,8 @@ class Board
             return true;
         }
 
+        //TODO add more terminal conditions
+
         return false;
     }
 	
@@ -129,6 +131,14 @@ class Board
     public int getLastPlayer()
     {
         return this.lastPlayer;
+    }
+
+    public int getPlayer1Score(){
+        return this.player1score;
+    }
+
+    public int getPlayer2Score(){
+        return this.player2score;
     }
 
     public int[][] getGameBoard()
