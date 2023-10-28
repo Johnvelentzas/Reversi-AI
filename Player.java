@@ -1,4 +1,4 @@
-class Player  //new comment
+class Player
 {
 	private int maxDepth;
     private int playerLetter;
