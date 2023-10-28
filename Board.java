@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-//hi gianni
 
 class Board
 {
@@ -40,7 +39,9 @@ class Board
 	
 	ArrayList<Board> getChildren(int letter) {return null;}
 	
-	public int evaluate () {return 0;}
+	public int evaluate() {
+         return 0;   
+    }
 	
 	public boolean isTerminal() {return true;}
 	
@@ -82,5 +83,17 @@ class Board
         this.lastPlayer = lastPlayer;
     }
 	
+
+    public int getDimention() {
+        return this.dimension;
+    }
+
+
+    public int getPawn(int row, int col) {
+        if (row < 0 || row >= this.dimension || col < 0 || col >= this.dimension) {
+            System.out.println("ERROR: WRONG COORDINATES GIVEN");
+            System.exit(0);}
+        return this.gameBoard[row][col];
+    }
 	
 }
