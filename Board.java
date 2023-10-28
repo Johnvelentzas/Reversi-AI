@@ -16,6 +16,8 @@ class Board
     public static final String BLACK = "B";
     public static final String UNDEFINED = "?";
 
+    public static final int DEFAULT_DIMENTION = 7;
+
     private int[][] gameBoard;
 
     private int lastPlayer;
@@ -23,12 +25,20 @@ class Board
     private Move lastMove;
 	
 	private int dimension;
+
+    public Board() {
+        create_board(DEFAULT_DIMENTION);
+    }
 	
     /**
      * Basic board constructor. Creates an {@code empty} board with the given dimentions
      * @param dim   x and y dimention.
      */
 	public Board(int dimentions) {
+        create_board(dimentions);
+    }
+
+    private void create_board(int dimentions) {
         this.dimension = dimentions;
         this.gameBoard = new int[dimentions][dimentions];
         for (int i = 0; i < this.dimension; i++) {
