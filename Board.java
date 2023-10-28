@@ -16,6 +16,12 @@ class Board
     public static final String BLACK = "B";
     public static final String UNDEFINED = "?";
 
+    public static final int PLAYER_1 = 1;
+    public static final int PLAYER_2 = -1;
+
+    private int player1score = 0;
+    private int player2score = 0;
+
     public static final int DEFAULT_DIMENTION = 7;
 
     private int[][] gameBoard;
@@ -26,6 +32,10 @@ class Board
 	
 	private int dimension;
 
+
+    /**
+     * Default board constructor. Creates an {@code empty} board with the default dimentions
+     */
     public Board() {
         create_board(DEFAULT_DIMENTION);
     }
@@ -91,7 +101,23 @@ class Board
 	
 	public int evaluate () {return 0;}
 	
-	public boolean isTerminal() {return true;}
+	public boolean isTerminal() {
+        Boolean isFull = true;
+        outer:
+        for (int i = 0; i < gameBoard.length; i++) {
+            for (int j = 0; j < gameBoard.length; j++) {
+                if (this.gameBoard[i][j] == EMPTY) {
+                    isFull = false;
+                    break outer;
+                }
+            }
+        }
+        if (isFull) {
+            return true;
+        }
+
+        return false;
+    }
 	
 	public Move getLastMove()
     {
@@ -108,7 +134,7 @@ class Board
         return this.gameBoard;
     }
 	
-	void setGameBoard(int[][] gameBoard)
+	private void setGameBoard(int[][] gameBoard)
     {
         for(int i = 0; i < this.dimension; i++)
         {
