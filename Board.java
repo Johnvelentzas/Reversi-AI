@@ -29,6 +29,22 @@ class Board
         this.gameBoard = new int[dimentions][dimentions];
         for (int i = 0; i < this.dimension; i++) {
             for (int j = 0; j < this.dimension; j++) {
+                if (i == dimentions / 2  - 1 && j == dimentions / 2 - 1) {
+                    this.gameBoard[i][j] = B;
+                    continue;
+                }
+                if (i == dimentions / 2 && j == dimentions / 2) {
+                    this.gameBoard[i][j] = B;
+                    continue;
+                }
+                if (i == dimentions / 2 && j == dimentions / 2 - 1) {
+                    this.gameBoard[i][j] = W;
+                    continue;
+                }
+                if (i == dimentions / 2  - 1 && j == dimentions / 2) {
+                    this.gameBoard[i][j] = W;
+                    continue;
+                }
                 this.gameBoard[i][j] = EMPTY;
             }
         }
