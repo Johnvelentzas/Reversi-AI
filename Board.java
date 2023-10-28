@@ -1,8 +1,13 @@
 import java.util.ArrayList;
-//hi gianni
 
 class Board
 {
+
+    public static void main(String[] args) {
+        Board board = new Board(7);
+        board.print();
+    }
+
 	public static final int W = 1;
     public static final int B = -1;
     public static final int EMPTY = 0;
@@ -19,9 +24,9 @@ class Board
      * Basic board constructor. Creates an {@code empty} board with the given dimentions
      * @param dim   x and y dimention.
      */
-	public Board(int dim) {
-        this.dimension = dim;
-        this.gameBoard = new int[dim][dim];
+	public Board(int dimentions) {
+        this.dimension = dimentions;
+        this.gameBoard = new int[dimentions][dimentions];
         for (int i = 0; i < this.dimension; i++) {
             for (int j = 0; j < this.dimension; j++) {
                 this.gameBoard[i][j] = EMPTY;
@@ -36,9 +41,23 @@ class Board
         this.setGameBoard(board.gameBoard);
     }
 	
-	public void print() {}
+    /**
+     * Prints the String representation of the board.
+     * e.x. reversi|0|1|2|3|4|5|6|7|
+     *            0|E|E|E|E|E|E|E|E|
+     *            1|E|E|E|E|E|E|E|E|
+     *            2|E|E|E|E|E|E|E|E|
+     *            3|E|E|E|B|W|E|E|E|
+     *            4|E|E|B|W|B|E|E|E|
+     *            5|E|E|W|E|E|E|E|E|
+     *            6|E|E|E|E|E|E|E|E|
+     *            7|E|E|E|E|E|E|E|E|
+     */
+	public void print() {
+        System.out.println(this.toString());
+    }
 	
-	ArrayList<Board> getChildren(int letter) {return null;}
+	ArrayList<Board> getChildren(int latter) {return null;}
 	
 	public int evaluate () {return 0;}
 	
@@ -80,6 +99,22 @@ class Board
     void setLastPlayer(int lastPlayer)
     {
         this.lastPlayer = lastPlayer;
+    }
+
+    public String toString(){
+        String result = "Reversi|";
+        for (int i = 0; i < gameBoard.length; i++) {
+            result += i + "|";
+        }
+        result += "\n";
+        for (int i = 0; i < gameBoard.length; i++) {
+            result += "      " + i + "|";
+            for (int j = 0; j < gameBoard.length; j++) {
+                result += this.gameBoard[i][j] + "|";
+            }
+            result += "\n";
+        }
+        return result;
     }
 	
 	
