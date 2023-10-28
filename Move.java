@@ -1,5 +1,5 @@
 /**
- * This class represents a move in a board game
+ * This class represents a <strong>move</strong> in a board game
  * where a move consists of the placement of a piece
  * (represented by an Integer value) in a grid (board)
  */
