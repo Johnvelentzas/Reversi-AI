@@ -133,6 +133,13 @@ class Board
     {
         return this.gameBoard;
     }
+
+    public int getPawn(int row, int col) {
+        if (row < 0 || row > this.dimension || col < 0 || col > this.dimension) {
+            System.out.println("ERROR: WRONG COORDINATES GIVEN");
+            System.exit(0);}
+        return this.gameBoard[row][col];
+    }
 	
 	private void setGameBoard(int[][] gameBoard)
     {
