@@ -97,7 +97,7 @@ class Board
         System.out.println(this.toString());
     }
 	
-	ArrayList<Board> getChildren(int latter) {return null;}
+	ArrayList<Board> getChildren(int letter) {return null;}
 	
 	public int evaluate() {
          return 0;   

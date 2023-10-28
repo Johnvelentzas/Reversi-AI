@@ -1,20 +1,20 @@
 class Player
 {
 	private int maxDepth;
-    private int playerLatter;
+    private int playerLetter;
 	
 	public Player() {}
 
-    public Player(int maxDepth, int playerLatter)
+    public Player(int maxDepth, int playerLetter)
     {
         this.maxDepth = maxDepth;
-        this.playerLatter = playerLatter;
+        this.playerLetter = playerLetter;
     }
 
     private int utility_Funtion(Board board) {
-        int playerLatter = board.getLastPlayer();
+        int playerLetter = board.getLastPlayer();
         int opponent;
-        if (playerLatter == -1) {opponent = 1;}
+        if (playerLetter == -1) {opponent = 1;}
         else {opponent = -1;}
 
         int playerPieces = 0;
@@ -22,7 +22,7 @@ class Player
     
         for (int row = 0; row < board.getDimention(); row++) {
             for (int col = 0; col < board.getDimention(); col++) {
-                if (board.getPawn(row, col) == playerLatter) {
+                if (board.getPawn(row, col) == playerLetter) {
                     playerPieces++;
                 } 
                 else if (board.getPawn(row, col) == opponent) {
