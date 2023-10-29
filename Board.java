@@ -1,5 +1,8 @@
 import java.util.ArrayList;
+ //TODO MAKE A FUNCTION TO CHECK IF THE MOVE IS INSIDE THE BOARD USING THE DIMENTIONS
 
+
+ 
 class Board
 {
 
@@ -211,6 +214,69 @@ class Board
         }
         return result;
     }
+
+    public void makeMove(Move move, int playerLetter) {
+        int row = move.getRow();
+        int col = move.getCol();
+    
+        // Check if the move is within the board boundaries
+        if (row < 0 || row >= dimension || col < 0 || col >= dimension) {
+            System.out.println("ERROR: WRONG COORDINATES IN makeMove FUNCTION");
+            System.exit(0);
+
+            //TODO throw exception
+
+        }
+    
+        // Check if the cell is empty
+        if (gameBoard[row][col] != EMPTY) {
+            System.out.println("ERROR: THE CELL IS NOT EMPTY IN makeMove FUNCTION");
+            System.exit(0);
+
+            //TODO throw exception
+
+        }
+
+        gameBoard[row][col] = playerLetter;
+    
+        // TODO update the opponent's captured pieces
+        
+    
+        // TODO update the score
+
+
+        // TODO set the last move
+    }
+
+
+    
+    public ArrayList<Move> findPossibleMoves(int playerLetter) { //returns an array list of all the possible moves for a specific player
+        ArrayList<Move> possibleMoves = new ArrayList<>();
+
+        for (int row = 0; row < dimension; row++) {
+            for (int col = 0; col < dimension; col++) {
+                if (isLegalMove(row, col, playerLetter)) { // Check if making a move in this cell is legal before adding it
+                    possibleMoves.add(new Move(row, col));
+                } 
+            }
+        }
+        return possibleMoves;
+    }
+
+
+
+    
+    private boolean isLegalMove(int row, int col, int playerLetter) {
+        
+        if (row < 0 || row >= dimension || col < 0 || col >= dimension) {return false;} // Check if the move is in the board boundaries
+    
+        if (gameBoard[row][col] != 0) {return false;} // Check if the cell is empty
+    
+        // TODO check if it can capture any of the opponents pawns
+    
+        return true;
+    }
+
 	
 
 }
