@@ -2,7 +2,7 @@ import java.util.ArrayList;
  //TODO MAKE A FUNCTION TO CHECK IF THE MOVE IS INSIDE THE BOARD USING THE DIMENTIONS
 
 
- 
+
 class Board
 {
 
@@ -154,6 +154,10 @@ class Board
         return this.dimension;
     }
 	
+    public Boolean IsMoveInBoard(int row, int col) {
+        if (row < 0 || row >= dimension || col < 0 || col >= dimension) {return false;}
+        else {return true;}
+    }
 
     public int getPawn(int row, int col) {
         if (row < 0 || row > this.dimension || col < 0 || col > this.dimension) {
@@ -220,7 +224,7 @@ class Board
         int col = move.getCol();
     
         // Check if the move is within the board boundaries
-        if (row < 0 || row >= dimension || col < 0 || col >= dimension) {
+        if (!IsMoveInBoard(row, col)) {
             System.out.println("ERROR: WRONG COORDINATES IN makeMove FUNCTION");
             System.exit(0);
 
@@ -268,7 +272,7 @@ class Board
     
     private boolean isLegalMove(int row, int col, int playerLetter) {
         
-        if (row < 0 || row >= dimension || col < 0 || col >= dimension) {return false;} // Check if the move is in the board boundaries
+        if (!IsMoveInBoard(row, col)) {return false;} // Check if the move is in the board boundaries
     
         if (gameBoard[row][col] != 0) {return false;} // Check if the cell is empty
     
