@@ -3,14 +3,63 @@ import java.awt.*;
 
 public class Reversi extends JPanel{
 
-    private static final Color BG_COLOR = Color.LIGHT_GRAY;
-    private static final Color WHITE_COLOR = Color.WHITE;
-    private static final Color BLACK_COLOR = Color.BLACK;
-    private static final Color GUI_COLOR = Color.GREEN;
+    public static final Color BG_COLOR = Color.LIGHT_GRAY;
+    public static Color PLAYER1_COLOR = Color.WHITE;
+    public static Color PLAYER2_COLOR = Color.BLACK;
+    public static final Color GUI_COLOR = Color.GREEN;
+    public static final Color BORDER_COLOR = Color.GREEN;
 
-    private static int dim = 7;
+    private JPanel menuPanel;
+    private JLabel title;
+    private JLabel dimDisplay;
+    private JButton inc;
+    private JButton dec;
+    private JLabel player1;
+    private JLabel player2;
+    private JButton player1Button;
+    private JButton player2Button;
+    private JButton player1ColorButton;
+    private JButton player2ColorButton;
+    private JButton starButton;
+
+    private JButton goToMenu;
+    private JLabel humanScore;
+    private JLabel AIScore;
+    private JButton goToSettings;
+    private JButton goToInfo;
+
+    private JPanel infoPanel;
+    private JLabel info;
+
+    private JPanel colorPanel;
+    private JButton[][] colourGrid;
+    private JLabel explaner;
+
+    private JPanel gamePanel;
+    private JButton[][] gameGrid;
+    private JButton place;
+
+    private JPanel settingsPanel;
+    private JLabel settingsLabel;
+
+    public static int dim = 7;
+    public CardLayout layout = new CardLayout();
 
     public Reversi(){
+        this.setLayout(layout);
+
+        createPanels();
+
+        this.add(menuPanel);
+        this.add(infoPanel);
+        this.add(colorPanel);
+        this.add(gamePanel);
+        this.add(settingsPanel);
+        layout.show(menuPanel, "Menu");
+    }
+
+    private void createPanels(){
+        this.menuPanel = new JPanel(new GridLayout(5, 1, 5, 0));
         
     }
     
