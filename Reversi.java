@@ -7,11 +7,13 @@ import java.io.File;
 
 public class Reversi extends JPanel implements ActionListener{
 
-    public static final int STARTING_WIDTH = 600;
-    public static final int STARTING_HEIGHT = 400;
+    public static final int STARTING_WIDTH = 1000;
+    public static final int STARTING_HEIGHT = 600;
 
-    public static final int MIN_DIM = 7;
-    public static final int MAX_DIM = 17;
+    public static final int MIN_DIM = 6;
+    public static final int MAX_DIM = 18;
+
+    public static final int BORDER_WIDTH = 2;
 
     public static final String TITLE = "Reversi";
     public static final Font TITLE_FONT = new Font("Serif", Font.BOLD, 56);
@@ -19,8 +21,6 @@ public class Reversi extends JPanel implements ActionListener{
     public static final Font NUM_FONT = new Font("Sans-Serif", Font.BOLD, 60);
 
     public static final Color BG_COLOR = Color.LIGHT_GRAY;
-    public static Color PLAYER1_COLOR = Color.WHITE;
-    public static Color PLAYER2_COLOR = Color.BLACK;
     public static final Color GUI_COLOR = Color.GREEN;
     public static final Color BORDER_COLOR = Color.GREEN;
 
@@ -32,9 +32,13 @@ public class Reversi extends JPanel implements ActionListener{
     public static Image upImg;
     public static Image backImg;
 
+    public Image PLAYER1PAWN;
+    public Image PLAYER2PAWN;
+    public Image EMPTY_PAWN;
+
     private Board board;
 
-    private int dim = 7;
+    private int dim = 8;
     private String currPanel = "menu";
     private String lastPanel = "menu";
     private int humanScore = 0;
@@ -78,6 +82,7 @@ public class Reversi extends JPanel implements ActionListener{
     private JLabel explaner;
 
     private JPanel gamePanel;
+    private JPanel gameInnerPanel;
     private JButton[][] gameGrid;
     private JButton place;
 
@@ -96,6 +101,10 @@ public class Reversi extends JPanel implements ActionListener{
             Reversi.settingsImg = ImageIO.read(new File("img/settings.png"));
             Reversi.upImg = ImageIO.read(new File("img/up.png"));
             Reversi.backImg = ImageIO.read(new File("img/back.png"));
+
+            this.PLAYER1PAWN = ImageIO.read(new File("img/settings.png"));
+            this.PLAYER2PAWN = ImageIO.read(new File("img/up.png"));
+            this.EMPTY_PAWN = ImageIO.read(new File("img/back.png"));
         } catch (Exception e) {
             System.out.println("Could not find all image resurces.");
         }
@@ -123,6 +132,8 @@ public class Reversi extends JPanel implements ActionListener{
         this.gamePanel.setBackground(Reversi.BG_COLOR);
         this.settingsPanel = new JPanel(new GridBagLayout());
         this.settingsPanel.setBackground(Reversi.BG_COLOR);
+        this.gameInnerPanel = new JPanel(new GridLayout());
+        this.gameInnerPanel.setBackground(Reversi.BG_COLOR);
 
         GridBagConstraints c = new GridBagConstraints();
         c.anchor = GridBagConstraints.NORTH;
@@ -363,9 +374,48 @@ public class Reversi extends JPanel implements ActionListener{
 
     private void setupGamePanel(){
         this.board = new Board(this.dim);
+        this.gameGrid = new JButton[this.dim][this.dim];
 
         GridBagConstraints c = new GridBagConstraints();
-        c.anchor = GridBagConstraints.NORTH;
+        this.gameInnerPanel.removeAll();
+        this.gamePanel.remove(this.gameInnerPanel);
+        this.gameInnerPanel = new JPanel(new GridLayout(this.dim, this.dim));
+        this.gameInnerPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        c.anchor = GridBagConstraints.PAGE_START;
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridwidth = 7;
+        c.weighty = 1;
+        this.gamePanel.add(this.gameInnerPanel, c);
+
+        for (int i = 0; i < this.dim; i++) {
+            for (int j = 0; j < this.dim; j++) {
+                this.gameGrid[i][j] = new JButton();
+                this.gameInnerPanel.add(this.gameGrid[i][j]);
+            }
+        }
+        this.updatePawns();
+    }
+
+    private void updatePawns(){
+        for (int i = 0; i < this.dim; i++) {
+            for (int j = 0; j < this.dim; j++) {
+                switch (this.board.getPawn(i, j)) {
+                    case -1:
+                        this.gameGrid[i][j].setIcon(new ImageIcon(this.PLAYER1PAWN));
+                        break;
+                    case 0:
+                        this.gameGrid[i][j].setIcon(new ImageIcon(this.PLAYER2PAWN));
+                        break;
+                    case 1:
+                        this.gameGrid[i][j].setIcon(new ImageIcon(this.EMPTY_PAWN));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
     public void updateLabels(){
