@@ -1,6 +1,4 @@
 import java.util.ArrayList;
- //TODO MAKE A FUNCTION TO CHECK IF THE MOVE IS INSIDE THE BOARD USING THE DIMENTIONS
-
 
 
 class Board
@@ -225,20 +223,14 @@ class Board
     
         // Check if the move is within the board boundaries
         if (!IsMoveInBoard(row, col)) {
-            System.out.println("ERROR: WRONG COORDINATES IN makeMove FUNCTION");
-            System.exit(0);
-
-            //TODO throw exception
-
+            System.out.println();
+            throw new IndexOutOfBoundsException("ERROR: WRONG COORDINATES IN makeMove FUNCTION");
         }
     
         // Check if the cell is empty
         if (gameBoard[row][col] != EMPTY) {
-            System.out.println("ERROR: THE CELL IS NOT EMPTY IN makeMove FUNCTION");
-            System.exit(0);
-
-            //TODO throw exception
-
+            System.out.println();
+            throw new IllegalArgumentException("ERROR: THE CELL IS NOT EMPTY IN makeMove FUNCTION");
         }
 
         gameBoard[row][col] = playerLetter;
@@ -276,11 +268,189 @@ class Board
     
         if (gameBoard[row][col] != 0) {return false;} // Check if the cell is empty
     
-        // TODO check if it can capture any of the opponents pawns
-    
-        return true;
+        else {return capturePawns(row, col, playerLetter);}
     }
 
-	
+
+    private boolean capturePawns(int row, int col, int playerLetter) {
+        int opponent = 0;
+        //int TotalOpponentPiecesCaptured = 0;
+        int player = playerLetter;
+        //int TotalPlayerPiecesWon = 0;
+
+        if (player == 1) {opponent = -1;}
+        else if (player == -1) {opponent = 1;}
+
+        // Search for Pawns that can be captured DOWN
+        if (searchDirection(row, col, player, opponent, 1, 0)) {
+            return true;
+        }
+
+        // Search for Pawns that can be captured UP
+        if (searchDirection(row, col, player, opponent, -1, 0)) {
+            return true;
+        }
+
+        // Search for Pawns that can be captured LEFT
+        if (searchDirection(row, col, player, opponent, 0, -1)) {
+            return true;
+        }
+
+        // Search for Pawns that can be captured RIGHT
+        if (searchDirection(row, col, player, opponent, 0, 1)) {
+            return true;
+        }
+
+        // Search for Pawns that can be captured DIAGONAL UP RIGHT
+        if (searchDirection(row, col, player, opponent, -1, 1)) {
+            return true;
+        }
+
+        // Search for Pawns that can be captured DIAGONAL UP LEFT
+        if (searchDirection(row, col, player, opponent, -1, -1)) {
+            return true;
+        }
+
+        // Search for Pawns that can be captured DIAGONAL DOWN RIGHT
+        if (searchDirection(row, col, player, opponent, 1, 1)) {
+            return true;
+        }
+
+        // Search for Pawns that can be captured DIAGONAL DOWN LEFT
+        if (searchDirection(row, col, player, opponent, 1, -1)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean searchDirection(int row, int col, int player, int opponent, int r, int c) {
+        boolean OpponentPiecesFound = false;
+    
+        row += r;
+        col += c;
+    
+        while (row >= 0 && row < dimension && col >= 0 && col < dimension) {
+            int cell = getPawn(row, col);
+    
+            if (cell == opponent) {OpponentPiecesFound = true;} 
+            else if (cell == player && OpponentPiecesFound) {return true;} 
+            else if (cell == 0) {break;}
+    
+            row += r;
+            col += c;
+        }
+    
+        return false;
+    }	
 
 }
+
+
+
+
+/* 
+        //search for Pawns that can be captured DOWN 
+        for (int r = row + 1; r <= dimension - 1; r++ ) {
+            if (getPawn(r, col) == opponent) {
+                OpponentPiecesFound = true;
+                continue;
+            }
+            else if (getPawn(r, col) == player && OpponentPiecesFound) {
+                return true;
+            }
+            else if (getPawn(r, col) == 0) {break;}
+        }
+
+        //search for Pawns that can be captured UP
+        for (int r = row - 1; r <= dimension - 1; r-- ) {
+            if (getPawn(r, col) == opponent) {
+                OpponentPiecesFound = true;
+                continue;
+            }
+            else if (getPawn(r, col) == player && OpponentPiecesFound) {
+                return true;
+            }
+            else if (getPawn(r, col) == 0) {break;}
+        }
+
+        //search for Pawns that can be captured LEFT
+        for (int c = col - 1; c <= dimension - 1; c-- ) {
+            if (getPawn(row, c) == opponent) {
+                OpponentPiecesFound = true;
+                continue;
+            }
+            else if (getPawn(row, c) == player && OpponentPiecesFound) {
+                return true;
+            }
+            else if (getPawn(row, c) == 0) {break;}
+        }
+
+        //search for Pawns that can be captured RIGHT
+        for (int c = col + 1; c <= dimension - 1; c++ ) {
+            if (getPawn(row, c) == opponent) {
+                OpponentPiecesFound = true;
+                continue;
+            }
+            else if (getPawn(row, c) == player && OpponentPiecesFound) {
+                return true;
+            }
+            else if (getPawn(row, c) == 0) {break;}
+        }
+
+        //search for Pawns that can be captured DIAGONAL UP RIGHT
+        int r = row - 1;
+        int c = col + 1;
+        while (r >= 0 && c < dimension) {
+            if (getPawn(r, c) == opponent) {
+                OpponentPiecesFound = true;
+                continue;
+            } 
+            else if (getPawn(r, c) == player && OpponentPiecesFound) {return true;} 
+            else if (getPawn(r, c) == 0) {break;}
+            r--;
+            c++;
+        }
+
+        //search for Pawns that can be captured DIAGONAL UP LEFT
+        r = row - 1;
+        c = col - 1;
+        while (r >= 0 && c >=0) {
+            if (getPawn(r, c) == opponent) {
+                OpponentPiecesFound = true;
+                continue;
+            } 
+            else if (getPawn(r, c) == player && OpponentPiecesFound) {return true;} 
+            else if (getPawn(r, c) == 0) {break;}
+            r--;
+            c--;
+        }
+
+        //search for Pawns that can be captured DIAGONAL DOWN RIGHT
+        r = row + 1;
+        c = col + 1;
+        while (r < dimension && c < dimension) {
+            if (getPawn(r, c) == opponent) {
+                OpponentPiecesFound = true;
+                continue;
+            } 
+            else if (getPawn(r, c) == player && OpponentPiecesFound) {return true;} 
+            else if (getPawn(r, c) == 0) {break;}
+            r++;
+            c++;
+        }
+
+        //search for Pawns that can be captured DIAGONAL DOWN LEFT
+        r = row + 1;
+        c = col - 1;
+        while (r < dimension && c >=0) {
+            if (getPawn(r, c) == opponent) {
+                OpponentPiecesFound = true;
+                continue;
+            } 
+            else if (getPawn(r, c) == player && OpponentPiecesFound) {return true;} 
+            else if (getPawn(r, c) == 0) {break;}
+            r++;
+            c--;
+        }
+*/
