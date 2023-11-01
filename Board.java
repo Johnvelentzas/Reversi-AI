@@ -268,10 +268,10 @@ class Board
     
         if (gameBoard[row][col] != 0) {return false;} // Check if the cell is empty
     
-        else {return capturePawns(row, col, playerLetter);}
+        else {return capturePawns(row, col, playerLetter);} // Check if pawns can be captured with this move (if not then it's not legal)
     }
 
-
+//helper funtion for isLegalMove: checks every direction for opponent pawns that can be captured - WILL ALSE BE USED WHEN A PLAYER'S TURN IS SKIPPED
     private boolean capturePawns(int row, int col, int playerLetter) {
         int opponent = 0;
         //int TotalOpponentPiecesCaptured = 0;
@@ -324,6 +324,7 @@ class Board
         return false;
     }
 
+    //helper funtion for capturePawns (for code optimization): changes rows and columns according to the directions we are searching
     private boolean searchDirection(int row, int col, int player, int opponent, int r, int c) {
         boolean OpponentPiecesFound = false;
     
