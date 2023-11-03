@@ -1,7 +1,10 @@
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+
 import javax.swing.*;
 
-public class settingsPanel extends JPanel implements Config{
+public class SettingsPanel extends JPanel implements Config, ItemListener{
     
     private Reversi parent;
 
@@ -16,7 +19,7 @@ public class settingsPanel extends JPanel implements Config{
 
     private JCheckBox previewMove;
 
-    public settingsPanel(Reversi parent){
+    public SettingsPanel(Reversi parent){
         super(new GridBagLayout());
         this.parent = parent;
         this.setBackground(Config.BG_COLOR);
@@ -40,6 +43,7 @@ public class settingsPanel extends JPanel implements Config{
         this.previewMove = new JCheckBox("Preview Move");
         this.previewMove.setFont(Config.SETTINGS_FONT);
         this.previewMove.setBorder(BorderFactory.createEmptyBorder(10, 20, 0, 10));
+        this.previewMove.addItemListener(this);
 
         this.settings = new JPanel();
         this.settings.setLayout(new BoxLayout(this.settings, BoxLayout.PAGE_AXIS));
@@ -47,5 +51,14 @@ public class settingsPanel extends JPanel implements Config{
 
         this.scrollSettings = new JScrollPane(this.settings, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.add(this.scrollSettings, this.settingsConstraints);
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        if (this.previewMove.isSelected()) {
+            this.parent.previewMove = true;
+        } else {
+            this.parent.previewMove = false;
+        }
     }
 }

@@ -23,7 +23,7 @@ public class Reversi extends JPanel implements ActionListener, Config{
 
     //Game Data
 
-    private Board board;
+    protected Board board;
 
     protected int dim = 8;
     protected String currPanel = "menu";
@@ -45,24 +45,9 @@ public class Reversi extends JPanel implements ActionListener, Config{
 
     private MainMenu menuPanel;
     private InfoPanel infoPanel;
-    private settingsPanel settingsPanel;
-
-    private JButton goToMenu;
-    private JLabel humanScoreLabel2;
-    private JLabel AIScoreLabel2;
-    private JButton goToInfo2;
-
-    private JButton goBackButton2;
-    private JButton goBackButton3;
-
-    private JPanel colorPanel;
-    private JButton[][] colourGrid;
-    private JLabel explaner;
-
-    private JPanel gamePanel;
-    private JPanel gameInnerPanel;
-    private JButton[][] gameGrid;
-    private JButton place;
+    private SettingsPanel settingsPanel;
+    private ColorPanel colorPanel;
+    private GamePanel gamePanel;
 
     public CardLayout layout;
 
@@ -88,7 +73,11 @@ public class Reversi extends JPanel implements ActionListener, Config{
         this.layout = new CardLayout();
         this.setLayout(layout);
 
-        createPanels();
+        this.menuPanel = new MainMenu(this);
+        this.infoPanel = new InfoPanel(this);
+        this.colorPanel = new ColorPanel(this);
+        this.gamePanel = new GamePanel(this);
+        this.settingsPanel = new SettingsPanel(this);
 
         this.add("menu", menuPanel);
         this.add("info", infoPanel);
@@ -98,91 +87,15 @@ public class Reversi extends JPanel implements ActionListener, Config{
         layout.show(this, "menu");
     }
 
-    private void createPanels(){
-        this.menuPanel = new MainMenu(this);
-        this.infoPanel = new InfoPanel(this);
-        this.colorPanel = new JPanel(new GridBagLayout());
-        this.gamePanel = new JPanel(new GridBagLayout());
-        this.settingsPanel = new settingsPanel(this);
-
-        GridBagConstraints c = new GridBagConstraints();
-        c.anchor = GridBagConstraints.NORTH;
-
-        this.goToMenu = new JButton(new ImageIcon(Reversi.menuImg));
-        this.goToMenu.addActionListener(this);
-        this.goToMenu.setActionCommand("goToMenu");
-        c.insets = new Insets(0, 0, 0, 0);
-        c.gridx = 0;
-        c.gridy = 0;
-        c.weightx = 0.3;
-        c.fill = GridBagConstraints.BOTH;
-        this.gamePanel.add(this.goToMenu, c);
-    }
-
-    private void setupGamePanel(){
-        this.board = new Board(this.dim);
-        this.gameGrid = new JButton[this.dim][this.dim];
-
-        GridBagConstraints c = new GridBagConstraints();
-        this.gameInnerPanel.removeAll();
-        this.gamePanel.remove(this.gameInnerPanel);
-        this.gameInnerPanel = new JPanel(new GridLayout(this.dim, this.dim));
-        this.gameInnerPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-        c.anchor = GridBagConstraints.PAGE_START;
-        c.fill = GridBagConstraints.BOTH;
-        c.gridx = 0;
-        c.gridy = 1;
-        c.gridwidth = 7;
-        c.weighty = 1;
-        this.gamePanel.add(this.gameInnerPanel, c);
-
-        for (int i = 0; i < this.dim; i++) {
-            for (int j = 0; j < this.dim; j++) {
-                this.gameGrid[i][j] = new JButton();
-                this.gameInnerPanel.add(this.gameGrid[i][j]);
-            }
-        }
-        this.updatePawns();
-    }
-
-    private void updatePawns(){
-        for (int i = 0; i < this.dim; i++) {
-            for (int j = 0; j < this.dim; j++) {
-                switch (this.board.getPawn(i, j)) {
-                    case -1:
-                        this.gameGrid[i][j].setIcon(new ImageIcon(this.PLAYER1PAWN));
-                        break;
-                    case 0:
-                        this.gameGrid[i][j].setIcon(new ImageIcon(this.PLAYER2PAWN));
-                        break;
-                    case 1:
-                        this.gameGrid[i][j].setIcon(new ImageIcon(this.EMPTY_PAWN));
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-    }
-
-    public void updateLabels(){
-        this.menuPanel.updateLabels();
-    }
-    
-    private static void createAndShowGui() {
-        Reversi mainPanel = new Reversi();
-
-        JFrame frame = new JFrame(Reversi.TITLE);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.getContentPane().add(mainPanel);
-        frame.setSize(STARTING_WIDTH, STARTING_HEIGHT);
-        frame.setLocationByPlatform(true);
-        frame.setVisible(true);
-    }
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            createAndShowGui();
+            Reversi mainPanel = new Reversi();
+            JFrame frame = new JFrame(Reversi.TITLE);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.getContentPane().add(mainPanel);
+            frame.setSize(STARTING_WIDTH, STARTING_HEIGHT);
+            frame.setLocationByPlatform(true);
+            frame.setVisible(true);
         });
     }
 
@@ -209,14 +122,14 @@ public class Reversi extends JPanel implements ActionListener, Config{
                     break;
                 }
                 this.dim += 1;
-                updateLabels();
+                this.menuPanel.updateLabels();
                 break;
             case "decDim": 
                 if (this.dim <= Reversi.MIN_DIM) {
                     break;
                 }
                 this.dim -= 1;
-                updateLabels();
+                this.menuPanel.updateLabels();
                 break;
             case "toggle1": 
                 if (this.player1 == 0) {
@@ -226,7 +139,7 @@ public class Reversi extends JPanel implements ActionListener, Config{
                     this.player1 = 0;
                     this.player1Name = "Human";
                 }
-                updateLabels();
+                this.menuPanel.updateLabels();
                 break;
             case "toggle2": 
                 if (this.player2 == 0) {
@@ -236,16 +149,18 @@ public class Reversi extends JPanel implements ActionListener, Config{
                     this.player2 = 0;
                     this.player2Name = "Human";
                 }
-                updateLabels();
+                this.menuPanel.updateLabels();
                 break;
             case "color1":
                 this.colorSelection = 1;
+                this.colorPanel.updateLabel();
                 this.lastPanel = this.currPanel;
                 this.currPanel = "color";
                 layout.show(this, "color");
                 break;
             case "color2":
                 this.colorSelection = 2;
+                this.colorPanel.updateLabel();
                 this.lastPanel = this.currPanel;
                 this.currPanel = "color";
                 layout.show(this, "color");
@@ -253,7 +168,7 @@ public class Reversi extends JPanel implements ActionListener, Config{
             case "start":
                 this.lastPanel = this.currPanel;
                 this.currPanel = "game";
-                setupGamePanel();
+                this.gamePanel.setupNewGame();
                 layout.show(this, "game");
                 break;
             case "goBack":
