@@ -36,7 +36,7 @@ class Player
     }
     
 	
-	public Move MiniMax(Board board) {
+	public Move MiniMax(Board board) { //ΜΙΝΙΜΑΧ ΧΩΡΙΣ ΠΡΙΟΝΙΣΜΑ Α-Β
         int maxScore = -1000;
         Move bestMove = null;
         int playerSymbol = this.playerLetter;
@@ -44,7 +44,11 @@ class Player
 
         for (Move move : possibleMoves) {
             Board newBoard = new Board(board); // Create a copy of the current board
-            newBoard.makeMove(move, playerLetter); // Creates a new board according to each possible move --> we search all these for the best one
+
+            // TODO USE getChildren METHOD TO FIND ALL POSIBLE MOVES 
+
+            //ΜΗΝ ΧΡΗΣΙΜΟΠΟΙΗΣΕΙΣ ΤΑ ΑΠΟ ΚΑΤΩ ΜΠΟΡΕΙ ΝΑ ΕΙΝΑΙ ΛΑΘΟΣ :( !!!!!!!!!!!!!!!!!!!!!!!!!!! (ΤΟΛΗ)
+            //newBoard.makeMove(move, playerLetter); // Creates a new board according to each possible move --> we search all these for the best one
             //int score = max(newBoard, maxDepth - 1); CALL MIN OR MAX ??? depth is given by the player
 
             /* 

@@ -97,9 +97,21 @@ class Board
 	public void print() {
         System.out.println(this.toString());
     }
+
+
 	
 	ArrayList<Board> getChildren(int letter) {return null;}
-	
+	// ΤΟΛΗ ΑΥΤΗ ΚΑΝΕ ΟΣΟ ΜΠΟΡΕΙΣ :)
+/**
+ ΘΑ ΠΡΕΠΕΙ ΝΑ ΕΠΙΣΤΡΕΦΕΙ ΜΙΑ ΛΙΣΤΑ ΑΠΟ ΠΙΝΑΚΕΣ ΠΟΥ ΘΑ ΕΙΝΑΙ ΤΑ ΠΑΙΔΙΑ ΤΟΥ ΚΟΜΒΟΥ ΜΑΣ (ΤΟΥ ΠΙΝΑΚΑ ΣΤΟΝ ΟΠΟΙΟ ΤΗΝ ΕΦΑΡΜΟΖΟΥΜΕ).
+ ΤΑ ΠΑΙΔΙΑ ΑΥΤΑ ΘΑ ΕΙΝΑΙ ΚΑΤΑΣΤΑΣΕΙΣ ΠΙΝΑΚΩΝ ΜΕΤΑ ΑΠΟ !!!ΚΑΘΕ!!! ΔΥΝΑΤΗ ΚΙΝΗΣΗ ΠΟΥ ΜΠΟΡΕΙ ΝΑ ΚΑΝΕΙ Ο ΣΥΓΚΕΚΡΙΜΕΝΟΣ ΠΑΙΧΤΗΣ
+ (ΤΟΝ ΠΑΙΡΝΟΥΜΕ ΑΠΟ ΤΟ ΟΡΙΣΜΑ ΠΟΥ ΕΧΕΙ Η ΣΥΝΑΡΤΗΣΗ ΚΑΙ ΤΗΝ ΕΦΑΡΜΟΖΟΥΜΕ ΠΑΝΩ ΣΕ ΠΙΝΑΚΑ). ΑΡΑ ΘΑ ΠΡΕΠΕΙ ΝΑ ΕΧΟΥΝ ΑΛΛΑΞΕΙ ΚΑΙ ΤΑ 
+ ΠΙΟΝΙΑ ΤΟΥ ΑΝΤΙΠΑΛΟΥ ΠΟΥ ΘΑ ΚΛΕΒΕΙ Ο ΠΑΙΧΤΗΣ ΜΕ ΤΗΝ ΚΑΘΕ ΚΙΝΗΣΗ. ΜΠΟΡΕΙΣ ΒΟΗΘΗΤΙΚΑ ΝΑ ΧΡΗΣΙΜΟΠΟΙΗΣΕΙΣ ΤΗΝ @findPossibleMoves 
+ ΠΟΥ ΕΧΕΙ ΥΛΟΠΟΙΗΘΕΙ ΠΙΟ ΚΑΤΩ
+ */
+    
+ //ΕΥΡΕΤΙΚΗ ΣΥΝΑΡΤΗΣΗ --> ΧΡΗΣΙΜΟΠΟΙΕΙΤΑΙ ΑΝΤΙ ΓΙΑ ΤΗΝ UTILITY ΟΤΑΝ Ο ΧΡΗΣΤΗΣ ΔΙΝΕΙ ΜΙΚΡΟΤΕΡΟ ΒΑΘΟΣ ΑΠΟ ΤΟ ΟΛΙΚΟ ΠΟΥ ΧΡΕΙΑΖΕΤΑΙ
+ //ΘΑ ΧΡΕΙΑΣΤΕΙ ΝΑ ΠΑΡΕΙ ΤΙΜΕΣ ΜΕ GET ΣΥΝΑΡΤΗΣΗ ΑΠΟ ΤΗΝ MAIN Ή ΤΗ ΔΙΕΠΑΦΗ ΓΙΑ ΝΑ ΕΦΑΡΜΟΣΤΕΙ
 	public int evaluate() {
          return 0;   
     }
@@ -119,7 +131,7 @@ class Board
             return true;
         }
 
-        //TODO add more terminal conditions
+        //TODO add more terminal conditions --> ΣΚΟΡ 0 ΓΙΑ ΚΑΠΟΙΟΝ ΠΑΙΧΤΗ, ΝΑ ΠΑΙΞΟΥΝ ΠΑΣΟ ΔΥΟ ΦΟΡΕΣ ΣΥΝΕΧΟΜΕΝΑ ΔΙΑΦΟΡΕΤΙΚΟΙ ΠΑΙΧΤΕΣ (ΧΡΗΣΗ ΣΥΝΑΡΤΗΣΗΣ capturePawns ΠΙΟ ΚΑΤΩ)
 
         return false;
     }
@@ -152,19 +164,19 @@ class Board
         return this.dimension;
     }
 	
-    public Boolean IsMoveInBoard(int row, int col) {
+    public Boolean IsMoveInBoard(int row, int col) { //ΕΛΕΓΧΕΙ ΑΝ Η ΚΙΝΗΣΗ ΕΙΝΑΙ ΕΝΤΟΣ ΟΡΙΩΝ ΤΟΥ ΠΙΝΑΚΑ
         if (row < 0 || row >= dimension || col < 0 || col >= dimension) {return false;}
         else {return true;}
     }
 
-    public int getPawn(int row, int col) {
+    public int getPawn(int row, int col) { //ΒΡΙΣΚΕΙ ΤΙ ΕΙΔΟΥΣ ΠΙΟΝΙ ΕΙΝΑΙ ΣΕ ΜΙΑ ΘΕΣΗ Ή ΑΝ ΕΙΝΑΙ ΑΔΕΙΑ
         if (row < 0 || row > this.dimension || col < 0 || col > this.dimension) {
             System.out.println("ERROR: WRONG COORDINATES GIVEN");
             System.exit(0);}
         return this.gameBoard[row][col];
     }
 	
-	private void setGameBoard(int[][] gameBoard)
+	private void setGameBoard(int[][] gameBoard) //ΦΤΙΑΧΝΕΙ ΤΟΝ ΠΙΝΑΚΑ 
     {
         for(int i = 0; i < this.dimension; i++)
         {
@@ -217,7 +229,7 @@ class Board
         return result;
     }
 
-    public void makeMove(Move move, int playerLetter) {
+    public void makeMove(Move move, int playerLetter) { //ΘΑ ΚΑΝΕΙ ΤΗΝ ΚΙΝΗΣΗ ΑΦΟΥ Ο ΜΙΝΙΜΑΧ ΑΛΓΟΡΙΘΜΟΣ ΕΠΙΛΕΞΕΙ ΤΗΝ ΚΑΛΥΤΕΡΗ ΑΠΟ ΤΙΣ ΔΙΑΘΕΣΙΜΕΣ
         int row = move.getRow();
         int col = move.getCol();
     
@@ -242,6 +254,8 @@ class Board
 
 
         // TODO set the last move
+
+        // TODO ΝΑ ΑΛΛΑΖΕΙ ΤΟΝ ΠΙΝΑΚΑ ??????
     }
 
 
@@ -271,7 +285,7 @@ class Board
         else {return capturePawns(row, col, playerLetter);} // Check if pawns can be captured with this move (if not then it's not legal)
     }
 
-//helper funtion for isLegalMove: checks every direction for opponent pawns that can be captured - WILL ALSE BE USED WHEN A PLAYER'S TURN IS SKIPPED
+    //helper funtion for isLegalMove: checks every direction for opponent pawns that can be captured - WILL ALSE BE USED WHEN A PLAYER'S TURN IS SKIPPED
     private boolean capturePawns(int row, int col, int playerLetter) {
         int opponent = 0;
         //int TotalOpponentPiecesCaptured = 0;
