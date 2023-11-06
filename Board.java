@@ -4,11 +4,6 @@ import java.util.ArrayList;
 class Board
 {
 
-    public static void main(String[] args) {
-        Board board = new Board(7);
-        board.print();
-    }
-
 	public static final int W = 1;
     public static final int B = -1;
     public static final int EMPTY = 0;
@@ -49,6 +44,10 @@ class Board
         create_board(dimentions);
     }
 
+    /**
+     * Internal constructor.
+     * @param dimentions x and y dimentions
+     */
     private void create_board(int dimentions) {
         this.dimension = dimentions;
         this.gameBoard = new int[dimentions][dimentions];
@@ -75,7 +74,9 @@ class Board
         }
     }
 	
-	// copy constructor
+	/**
+     * Copy constructor.
+     */
     public Board(Board board) {
         this.dimension = board.dimension;
         this.gameBoard = new int[this.dimension][this.dimension];
@@ -164,19 +165,66 @@ class Board
         return this.dimension;
     }
 	
-    public Boolean IsMoveInBoard(int row, int col) { //ΕΛΕΓΧΕΙ ΑΝ Η ΚΙΝΗΣΗ ΕΙΝΑΙ ΕΝΤΟΣ ΟΡΙΩΝ ΤΟΥ ΠΙΝΑΚΑ
-        if (row < 0 || row >= dimension || col < 0 || col >= dimension) {return false;}
-        else {return true;}
+    /**
+     * Checks if coordinates are within the bounds of the board.
+     * @param row the row.
+     * @param col the column.
+     * @return {@code true} if the coordinates are within the board else {@code false}.
+     */
+    public Boolean isMoveInBoard(int row, int col) {
+        if (row < 0 || row >= dimension || col < 0 || col >= dimension) {
+            return false;
+        }
+        return true;
     }
 
-    public int getPawn(int row, int col) { //ΒΡΙΣΚΕΙ ΤΙ ΕΙΔΟΥΣ ΠΙΟΝΙ ΕΙΝΑΙ ΣΕ ΜΙΑ ΘΕΣΗ Ή ΑΝ ΕΙΝΑΙ ΑΔΕΙΑ
-        if (row < 0 || row > this.dimension || col < 0 || col > this.dimension) {
+    /**
+     * Checks if the {@link Move move} is within the bounds of the board.
+     * @param move the {@link Move Move} object.
+     * @return {@code true} if the coordinates are within the board else {@code false}.
+     * @see {@link Move the move class}
+     */
+    public Boolean isMoveInBoard(Move move){
+        if (move.getRow() < 0 || move.getRow() >= dimension || move.getCol() < 0 || move.getCol() >= dimension) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * This function returns the pawn in the location specified by the parameters.
+     * @param row the row value
+     * @param col the column value
+     * @return the integer representation of the pawn in the board at the given row and column.
+     */
+    public int getPawn(int row, int col) {
+        if (isMoveInBoard(row, col)) {
             System.out.println("ERROR: WRONG COORDINATES GIVEN");
-            System.exit(0);}
+            System.exit(0);
+        }
         return this.gameBoard[row][col];
     }
+
+    /**
+     * This function returns the pawn in the location specified by the {@link Move move} object.
+     * @param move the {@link Move Move} object.
+     * @return the integer representation of the pawn in the board at the given {@link Move move} object location.
+     * @see {@link Move the move class}
+     */
+    public int getPawn(Move move) {
+        if (isMoveInBoard(move)) {
+            System.out.println("ERROR: WRONG COORDINATES GIVEN");
+            System.exit(0);
+        }
+        return this.gameBoard[move.getRow()][move.getCol()];
+    }
 	
-	private void setGameBoard(int[][] gameBoard) //ΦΤΙΑΧΝΕΙ ΤΟΝ ΠΙΝΑΚΑ 
+
+    /**
+     * Internal function. Creates a new 2d array of type {@code int} with the same values as the given array
+     * @param gameBoard the array to be copied. Is not modified.
+     */
+	private void setGameBoard(int[][] gameBoard)
     {
         for(int i = 0; i < this.dimension; i++)
         {
@@ -229,18 +277,23 @@ class Board
         return result;
     }
 
-    public void makeMove(Move move, int playerLetter) { //ΘΑ ΚΑΝΕΙ ΤΗΝ ΚΙΝΗΣΗ ΑΦΟΥ Ο ΜΙΝΙΜΑΧ ΑΛΓΟΡΙΘΜΟΣ ΕΠΙΛΕΞΕΙ ΤΗΝ ΚΑΛΥΤΕΡΗ ΑΠΟ ΤΙΣ ΔΙΑΘΕΣΙΜΕΣ
+    /**
+     * Places the player Pawn in the {@code Board} in the location of the move if its empty and within bounds.
+     * @param move the {@link Move move} object.
+     * @param playerLetter the int representation of the pawn of the player.
+     */
+    public void makeMove(Move move, int playerLetter) {
         int row = move.getRow();
         int col = move.getCol();
     
         // Check if the move is within the board boundaries
-        if (!IsMoveInBoard(row, col)) {
+        if (!isMoveInBoard(move)) {
             System.out.println();
             throw new IndexOutOfBoundsException("ERROR: WRONG COORDINATES IN makeMove FUNCTION");
         }
     
         // Check if the cell is empty
-        if (gameBoard[row][col] != EMPTY) {
+        if (getPawn(move) != EMPTY) {
             System.out.println();
             throw new IllegalArgumentException("ERROR: THE CELL IS NOT EMPTY IN makeMove FUNCTION");
         }
@@ -265,207 +318,50 @@ class Board
 
         for (int row = 0; row < dimension; row++) {
             for (int col = 0; col < dimension; col++) {
-                if (isLegalMove(row, col, playerLetter)) { // Check if making a move in this cell is legal before adding it
-                    possibleMoves.add(new Move(row, col));
+                Move move = new Move(row, col);
+                if (isLegalMove(move, playerLetter)) { // Check if making a move in this cell is legal before adding it
+                    possibleMoves.add(move);
                 } 
             }
         }
         return possibleMoves;
     }
-
-
-
     
-    private boolean isLegalMove(int row, int col, int playerLetter) {
+    private boolean isLegalMove(Move move, int playerLetter) {
         
-        if (!IsMoveInBoard(row, col)) {return false;} // Check if the move is in the board boundaries
+        if (!isMoveInBoard(move)) {return false;} // Check if the move is in the board boundaries
     
-        if (gameBoard[row][col] != 0) {return false;} // Check if the cell is empty
+        if (this.getPawn(move) != EMPTY) {return false;} // Check if the cell is empty
     
-        else {return capturePawns(row, col, playerLetter);} // Check if pawns can be captured with this move (if not then it's not legal)
-    }
-
-    //helper funtion for isLegalMove: checks every direction for opponent pawns that can be captured - WILL ALSE BE USED WHEN A PLAYER'S TURN IS SKIPPED
-    private boolean capturePawns(int row, int col, int playerLetter) {
-        int opponent = 0;
-        //int TotalOpponentPiecesCaptured = 0;
-        int player = playerLetter;
-        //int TotalPlayerPiecesWon = 0;
-
-        if (player == 1) {opponent = -1;}
-        else if (player == -1) {opponent = 1;}
-
-        // Search for Pawns that can be captured DOWN
-        if (searchDirection(row, col, player, opponent, 1, 0)) {
-            return true;
-        }
-
-        // Search for Pawns that can be captured UP
-        if (searchDirection(row, col, player, opponent, -1, 0)) {
-            return true;
-        }
-
-        // Search for Pawns that can be captured LEFT
-        if (searchDirection(row, col, player, opponent, 0, -1)) {
-            return true;
-        }
-
-        // Search for Pawns that can be captured RIGHT
-        if (searchDirection(row, col, player, opponent, 0, 1)) {
-            return true;
-        }
-
-        // Search for Pawns that can be captured DIAGONAL UP RIGHT
-        if (searchDirection(row, col, player, opponent, -1, 1)) {
-            return true;
-        }
-
-        // Search for Pawns that can be captured DIAGONAL UP LEFT
-        if (searchDirection(row, col, player, opponent, -1, -1)) {
-            return true;
-        }
-
-        // Search for Pawns that can be captured DIAGONAL DOWN RIGHT
-        if (searchDirection(row, col, player, opponent, 1, 1)) {
-            return true;
-        }
-
-        // Search for Pawns that can be captured DIAGONAL DOWN LEFT
-        if (searchDirection(row, col, player, opponent, 1, -1)) {
-            return true;
-        }
-
-        return false;
+        else {return !capturedPawnsFrom(move, playerLetter).isEmpty();} // Check if pawns can be captured with this move (if not then it's not legal)
     }
 
     //helper funtion for capturePawns (for code optimization): changes rows and columns according to the directions we are searching
-    private boolean searchDirection(int row, int col, int player, int opponent, int r, int c) {
-        boolean OpponentPiecesFound = false;
-    
-        row += r;
-        col += c;
-    
-        while (row >= 0 && row < dimension && col >= 0 && col < dimension) {
-            int cell = getPawn(row, col);
-    
-            if (cell == opponent) {OpponentPiecesFound = true;} 
-            else if (cell == player && OpponentPiecesFound) {return true;} 
-            else if (cell == 0) {break;}
-    
-            row += r;
-            col += c;
-        }
-    
-        return false;
-    }	
+    public ArrayList<Move> capturedPawnsFrom(Move move, int playerLetter){
+        ArrayList<Move> capturedPawns = new ArrayList<>();
+        capturedPawns.addAll(capturedPawnsFrom(move, playerLetter, Move.Direction.East));
+        capturedPawns.addAll(capturedPawnsFrom(move, playerLetter, Move.Direction.North));
+        capturedPawns.addAll(capturedPawnsFrom(move, playerLetter, Move.Direction.NorthEast));
+        capturedPawns.addAll(capturedPawnsFrom(move, playerLetter, Move.Direction.NorthWest));
+        capturedPawns.addAll(capturedPawnsFrom(move, playerLetter, Move.Direction.South));
+        capturedPawns.addAll(capturedPawnsFrom(move, playerLetter, Move.Direction.SouthEast));
+        capturedPawns.addAll(capturedPawnsFrom(move, playerLetter, Move.Direction.SouthWest));
+        capturedPawns.addAll(capturedPawnsFrom(move, playerLetter, Move.Direction.West));
+        return capturedPawns;
+    }
 
+
+    public ArrayList<Move> capturedPawnsFrom(Move move, int playerLetter, Move.Direction dir){
+        ArrayList<Move> capturedPawns = new ArrayList<>();
+        while (this.isMoveInBoard(move.getDir(dir))) {
+            move = move.getDir(dir);
+            if (this.getPawn(move) == playerLetter) {
+                return capturedPawns;
+            }else{
+                capturedPawns.add(move);
+            }
+        }
+        capturedPawns.clear();
+        return capturedPawns;
+    }
 }
-
-
-
-
-/* 
-        //search for Pawns that can be captured DOWN 
-        for (int r = row + 1; r <= dimension - 1; r++ ) {
-            if (getPawn(r, col) == opponent) {
-                OpponentPiecesFound = true;
-                continue;
-            }
-            else if (getPawn(r, col) == player && OpponentPiecesFound) {
-                return true;
-            }
-            else if (getPawn(r, col) == 0) {break;}
-        }
-
-        //search for Pawns that can be captured UP
-        for (int r = row - 1; r <= dimension - 1; r-- ) {
-            if (getPawn(r, col) == opponent) {
-                OpponentPiecesFound = true;
-                continue;
-            }
-            else if (getPawn(r, col) == player && OpponentPiecesFound) {
-                return true;
-            }
-            else if (getPawn(r, col) == 0) {break;}
-        }
-
-        //search for Pawns that can be captured LEFT
-        for (int c = col - 1; c <= dimension - 1; c-- ) {
-            if (getPawn(row, c) == opponent) {
-                OpponentPiecesFound = true;
-                continue;
-            }
-            else if (getPawn(row, c) == player && OpponentPiecesFound) {
-                return true;
-            }
-            else if (getPawn(row, c) == 0) {break;}
-        }
-
-        //search for Pawns that can be captured RIGHT
-        for (int c = col + 1; c <= dimension - 1; c++ ) {
-            if (getPawn(row, c) == opponent) {
-                OpponentPiecesFound = true;
-                continue;
-            }
-            else if (getPawn(row, c) == player && OpponentPiecesFound) {
-                return true;
-            }
-            else if (getPawn(row, c) == 0) {break;}
-        }
-
-        //search for Pawns that can be captured DIAGONAL UP RIGHT
-        int r = row - 1;
-        int c = col + 1;
-        while (r >= 0 && c < dimension) {
-            if (getPawn(r, c) == opponent) {
-                OpponentPiecesFound = true;
-                continue;
-            } 
-            else if (getPawn(r, c) == player && OpponentPiecesFound) {return true;} 
-            else if (getPawn(r, c) == 0) {break;}
-            r--;
-            c++;
-        }
-
-        //search for Pawns that can be captured DIAGONAL UP LEFT
-        r = row - 1;
-        c = col - 1;
-        while (r >= 0 && c >=0) {
-            if (getPawn(r, c) == opponent) {
-                OpponentPiecesFound = true;
-                continue;
-            } 
-            else if (getPawn(r, c) == player && OpponentPiecesFound) {return true;} 
-            else if (getPawn(r, c) == 0) {break;}
-            r--;
-            c--;
-        }
-
-        //search for Pawns that can be captured DIAGONAL DOWN RIGHT
-        r = row + 1;
-        c = col + 1;
-        while (r < dimension && c < dimension) {
-            if (getPawn(r, c) == opponent) {
-                OpponentPiecesFound = true;
-                continue;
-            } 
-            else if (getPawn(r, c) == player && OpponentPiecesFound) {return true;} 
-            else if (getPawn(r, c) == 0) {break;}
-            r++;
-            c++;
-        }
-
-        //search for Pawns that can be captured DIAGONAL DOWN LEFT
-        r = row + 1;
-        c = col - 1;
-        while (r < dimension && c >=0) {
-            if (getPawn(r, c) == opponent) {
-                OpponentPiecesFound = true;
-                continue;
-            } 
-            else if (getPawn(r, c) == player && OpponentPiecesFound) {return true;} 
-            else if (getPawn(r, c) == 0) {break;}
-            r++;
-            c--;
-        }
-*/
