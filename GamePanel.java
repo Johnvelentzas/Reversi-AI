@@ -1,9 +1,11 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.*;
 
-public class GamePanel extends JPanel implements Config{
+public class GamePanel extends JPanel implements ActionListener, Config{
     
     private Reversi parent;
     
@@ -92,6 +94,8 @@ public class GamePanel extends JPanel implements Config{
         for (int i = 0; i < gameGrid.length; i++) {
             for (int j = 0; j < gameGrid[i].length; j++) {
                 JButton button = new JButton();
+                button.addActionListener(this);
+                button.setActionCommand(i + "-" + j);
                 button.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
                 button.setPreferredSize(new Dimension(50, 50));
                 this.gameGrid[i][j] = button;
@@ -141,9 +145,40 @@ public class GamePanel extends JPanel implements Config{
             this.parent.posibleMoves.clear();
         }
         this.updatePawns();
+
+
     }
 
     private void finishGame(){
 
+    }
+
+    private void placeMove(Move move){
+        this.parent.board.makeMove(move, this.parent.activePlayerLetter);
+        if (this.parent.activePlayer == 1) {
+            this.parent.activePlayer = 2;
+            this.parent.activePlayerInput = this.parent.player2;
+            this.parent.activePlayerLetter = Board.PLAYER_2;
+            this.parent.activePlayerLabel = "Player 2";
+        } else {
+            this.parent.activePlayer = 1;
+            this.parent.activePlayerInput = this.parent.player1;
+            this.parent.activePlayerLetter = Board.PLAYER_1;
+            this.parent.activePlayerLabel = "Player 1";
+        }
+        this.nextMove();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String[] command = e.getActionCommand().split("-");
+        Move move = new Move(Integer.parseInt(command[0]), Integer.parseInt(command[1]));
+        if (this.parent.activePlayerInput == Player.human) {
+            for (Move posibleMove : this.parent.posibleMoves) {
+                if (move.equals(posibleMove)) {
+                    placeMove(move);
+                }
+            }
+        }
     }
 }

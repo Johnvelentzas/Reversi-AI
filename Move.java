@@ -137,4 +137,11 @@ public class Move
     {
         this.value = value;
     }
+
+    public boolean equals(Move move){
+        if (this.row == move.getRow() && this.col == move.getCol()) {
+            return true;
+        }
+        return false;
+    }
 }
