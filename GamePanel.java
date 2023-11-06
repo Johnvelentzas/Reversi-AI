@@ -117,5 +117,11 @@ public class GamePanel extends JPanel implements Config{
                 }
             }
         }
+        if(this.parent.activePlayer == 1 && this.parent.player1 == Reversi.Player.human){
+
+        }
+        if(this.parent.activePlayer == 2 && this.parent.player2 == Reversi.Player.human){
+            
+        }
     }
 }
