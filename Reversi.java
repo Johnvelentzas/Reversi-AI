@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 
 public class Reversi extends JPanel implements ActionListener, Config{
 
@@ -17,13 +18,15 @@ public class Reversi extends JPanel implements ActionListener, Config{
     public static Image upImg;
     public static Image backImg;
 
-    public Image PLAYER1PAWN;
-    public Image PLAYER2PAWN;
-    public Image EMPTY_PAWN;
+    protected Image PLAYER1PAWN;
+    protected Image PLAYER2PAWN;
+    protected Image EMPTY_PAWN;
+    protected Image POSIBLE_MOVE;
 
     //Game Data
 
     protected Board board;
+    protected ArrayList<Move> posibleMoves;
 
     protected int dim = 8;
     protected String currPanel = "menu";
@@ -62,9 +65,10 @@ public class Reversi extends JPanel implements ActionListener, Config{
             Reversi.upImg = ImageIO.read(new File("img/up.png"));
             Reversi.backImg = ImageIO.read(new File("img/back.png"));
 
-            this.PLAYER1PAWN = ImageIO.read(new File("img/settings.png"));
-            this.PLAYER2PAWN = ImageIO.read(new File("img/up.png"));
-            this.EMPTY_PAWN = ImageIO.read(new File("img/back.png"));
+            this.PLAYER1PAWN = ImageIO.read(new File("Pawns/grey.png"));
+            this.PLAYER2PAWN = ImageIO.read(new File("Pawns/green.png"));
+            this.EMPTY_PAWN = ImageIO.read(new File("Pawns/empty.png"));
+            this.POSIBLE_MOVE = ImageIO.read(new File("img/add.png"));
 
         } catch (Exception e) {
             System.out.println("Could not find all image resurces.");
@@ -89,6 +93,13 @@ public class Reversi extends JPanel implements ActionListener, Config{
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(
+                UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception e) {
+                System.out.println("Could not load System UI");
+            }
+
             Reversi mainPanel = new Reversi();
             JFrame frame = new JFrame(Reversi.TITLE);
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

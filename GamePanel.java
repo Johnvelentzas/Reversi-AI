@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
 
 public class GamePanel extends JPanel implements Config{
@@ -30,6 +32,7 @@ public class GamePanel extends JPanel implements Config{
     public GamePanel(Reversi parent){
         super(new GridBagLayout());
         this.parent = parent;
+        this.parent.posibleMoves = new ArrayList<>();
         this.setBackground(Config.BG_COLOR);
 
         this.goToMainMenuConstraints = new GridBagConstraints(0, 0, 1, 1, 0.3, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
@@ -79,7 +82,10 @@ public class GamePanel extends JPanel implements Config{
 
         for (int i = 0; i < gameGrid.length; i++) {
             for (int j = 0; j < gameGrid[i].length; j++) {
-                this.gameGrid[i][j] = new JButton();
+                JButton button = new JButton();
+                button.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+                button.setPreferredSize(new Dimension(50, 50));
+                this.gameGrid[i][j] = button;
                 this.gridPanel.add(this.gameGrid[i][j]);
             }
         }
@@ -101,10 +107,10 @@ public class GamePanel extends JPanel implements Config{
                         this.gameGrid[i][j].setIcon(new ImageIcon(this.parent.PLAYER1PAWN));
                         break;
                     case 0:
-                        this.gameGrid[i][j].setIcon(new ImageIcon(this.parent.PLAYER2PAWN));
+                        this.gameGrid[i][j].setIcon(new ImageIcon(this.parent.EMPTY_PAWN));
                         break;
                     case 1:
-                        this.gameGrid[i][j].setIcon(new ImageIcon(this.parent.EMPTY_PAWN));
+                        this.gameGrid[i][j].setIcon(new ImageIcon(this.parent.PLAYER2PAWN));
                         break;
                     default:
                         break;
