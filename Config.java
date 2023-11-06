@@ -3,6 +3,11 @@ import java.awt.Font;
 
 public interface Config {
 
+    enum Player{
+        human,
+        AI
+    }
+
     public static final int STARTING_WIDTH = 1000;
     public static final int STARTING_HEIGHT = 600;
 

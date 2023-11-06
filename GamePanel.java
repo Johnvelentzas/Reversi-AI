@@ -9,6 +9,7 @@ public class GamePanel extends JPanel implements Config{
     
     private JButton goToMainMenu;
     private JLabel humanScoreLabel;
+    private JLabel activePlayer;
     private JLabel AIScoreLabel;
     private JButton goToInfo;
     private JPanel innerPanel;
@@ -18,6 +19,7 @@ public class GamePanel extends JPanel implements Config{
 
     private GridBagConstraints goToMainMenuConstraints;
     private GridBagConstraints humanScoreLabelConstraints;
+    private GridBagConstraints activePlayerConstraints;
     private GridBagConstraints AIScoreLabelConstraints;
     private GridBagConstraints goToInfoConstraints;
     private GridBagConstraints innerPanelConstraints;
@@ -27,25 +29,27 @@ public class GamePanel extends JPanel implements Config{
     public void updateLabels(){
         this.humanScoreLabel.setText("Human: " + this.parent.humanScore);
         this.AIScoreLabel.setText(this.parent.AIScore + " :AI");
+        this.activePlayer.setText(this.parent.activePlayerLabel);
     }
 
     public GamePanel(Reversi parent){
         super(new GridBagLayout());
         this.parent = parent;
-        this.parent.posibleMoves = new ArrayList<>();
         this.setBackground(Config.BG_COLOR);
 
         this.goToMainMenuConstraints = new GridBagConstraints(0, 0, 1, 1, 0.3, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
 
         this.humanScoreLabelConstraints = new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0);
 
-        this.AIScoreLabelConstraints = new GridBagConstraints(2, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 10), 0, 0);
+        this.activePlayerConstraints = new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 10, 0, 10), 0, 0);
 
-        this.goToInfoConstraints = new GridBagConstraints(3, 0, 1, 1, 0.3, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
+        this.AIScoreLabelConstraints = new GridBagConstraints(3, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 10), 0, 0);
 
-        this.innerPanelConstraints = new GridBagConstraints(0, 1, 4, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0);
+        this.goToInfoConstraints = new GridBagConstraints(4, 0, 1, 1, 0.3, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
 
-        this.placePawnConstraints = new GridBagConstraints(0, 2, 4, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(10, 0, 10, 0), 0, 0);
+        this.innerPanelConstraints = new GridBagConstraints(0, 1, 5, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0);
+
+        this.placePawnConstraints = new GridBagConstraints(0, 2, 5, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(10, 0, 10, 0), 0, 0);
 
         this.goToMainMenu = new JButton(new ImageIcon(Reversi.menuImg));
         this.goToMainMenu.addActionListener(this.parent);
@@ -55,6 +59,10 @@ public class GamePanel extends JPanel implements Config{
         this.humanScoreLabel = new JLabel("Human: " + this.parent.humanScore);
         this.humanScoreLabel.setFont(Config.TEXT_FONT);
         this.add(this.humanScoreLabel, this.humanScoreLabelConstraints);
+
+        this.activePlayer = new JLabel(this.parent.activePlayerLabel);
+        this.activePlayer.setFont(Config.TEXT_FONT);
+        this.add(this.activePlayer, this.activePlayerConstraints);
 
         this.AIScoreLabel = new JLabel(this.parent.AIScore + " :AI", JLabel.RIGHT);
         this.AIScoreLabel.setFont(Config.TEXT_FONT);
@@ -75,6 +83,7 @@ public class GamePanel extends JPanel implements Config{
 
     public void setupNewGame(){
         this.parent.board = new Board(this.parent.dim);
+        this.parent.posibleMoves = new ArrayList<>();
         this.gameGrid = new JButton[this.parent.dim][this.parent.dim];
         this.innerPanel.removeAll();
         this.gridPanel = new JPanel(new GridLayout(this.parent.dim, this.parent.dim));
@@ -90,13 +99,13 @@ public class GamePanel extends JPanel implements Config{
             }
         }
 
-        this.updatePawns();
-
         if (this.parent.previewMove) {
             this.add(this.placePawn, this.placePawnConstraints);
         }else{
             this.remove(this.placePawn);
         }
+
+        this.nextMove();
     }
 
     public void updatePawns(){
@@ -117,11 +126,24 @@ public class GamePanel extends JPanel implements Config{
                 }
             }
         }
-        if(this.parent.activePlayer == 1 && this.parent.player1 == Reversi.Player.human){
+        for (Move pawn : this.parent.posibleMoves) {
+            this.gameGrid[pawn.getRow()][pawn.getCol()].setIcon(new ImageIcon(this.parent.POSIBLE_MOVE));
+        }
+    }
 
+    private void nextMove(){
+        if (this.parent.board.isTerminal()) {
+            finishGame();
         }
-        if(this.parent.activePlayer == 2 && this.parent.player2 == Reversi.Player.human){
-            
+        if (this.parent.activePlayerInput == Player.human ) {
+            this.parent.posibleMoves = this.parent.board.findPossibleMoves(this.parent.activePlayerLetter);
+        } else{
+            this.parent.posibleMoves.clear();
         }
+        this.updatePawns();
+    }
+
+    private void finishGame(){
+
     }
 }

@@ -8,11 +8,6 @@ import java.util.ArrayList;
 
 public class Reversi extends JPanel implements ActionListener, Config{
 
-    enum Player{
-        human,
-        AI
-    }
-
     //Game Images
 
     public static Image colorImg;
@@ -41,6 +36,9 @@ public class Reversi extends JPanel implements ActionListener, Config{
     protected Player player1 = Player.human;
     protected Player player2 = Player.AI;
     protected int activePlayer = 1;
+    protected Player activePlayerInput = Player.human;
+    protected int activePlayerLetter = Board.PLAYER_1;
+    protected String activePlayerLabel = "Player 1";
     protected String player1Name = "Human";
     protected String player2Name = "AI";
     protected int colorSelection = 0;
@@ -150,9 +148,11 @@ public class Reversi extends JPanel implements ActionListener, Config{
             case "toggle1": 
                 if (this.player1 == Player.human) {
                     this.player1 = Player.AI;
+                    this.activePlayerInput = Player.AI;
                     this.player1Name = "AI";
                 }else{
                     this.player1 = Player.human;
+                    this.activePlayerInput = Player.human;
                     this.player1Name = "Human";
                 }
                 this.menuPanel.updateLabels();

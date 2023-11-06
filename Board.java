@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 
 
@@ -198,9 +201,9 @@ class Board
      * @return the integer representation of the pawn in the board at the given row and column.
      */
     public int getPawn(int row, int col) {
-        if (isMoveInBoard(row, col)) {
+        if (!isMoveInBoard(row, col)) {
             System.out.println("ERROR: WRONG COORDINATES GIVEN");
-            System.exit(0);
+            throw new UncheckedIOException(new IOException());
         }
         return this.gameBoard[row][col];
     }
@@ -212,7 +215,7 @@ class Board
      * @see {@link Move the move class}
      */
     public int getPawn(Move move) {
-        if (isMoveInBoard(move)) {
+        if (!isMoveInBoard(move)) {
             System.out.println("ERROR: WRONG COORDINATES GIVEN");
             System.exit(0);
         }
@@ -355,6 +358,9 @@ class Board
         ArrayList<Move> capturedPawns = new ArrayList<>();
         while (this.isMoveInBoard(move.getDir(dir))) {
             move = move.getDir(dir);
+            if (this.getPawn(move) == EMPTY) {
+                break;
+            }
             if (this.getPawn(move) == playerLetter) {
                 return capturedPawns;
             }else{
