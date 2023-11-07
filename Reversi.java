@@ -27,6 +27,8 @@ public class Reversi extends JPanel implements ActionListener, Config{
 
     protected Board board;
     protected ArrayList<Move> posibleMoves;
+    protected ArrayList<Move> previewPawns;
+    protected Move nextMove;
 
     protected int dim = Board.DEFAULT_DIMENTION;
     protected int maxDepth = Board.DEFAULT_MAX_DEPTH;
@@ -39,7 +41,7 @@ public class Reversi extends JPanel implements ActionListener, Config{
     protected Player player2;
     protected PlayerTag player2Tag = PlayerTag.AI;
     protected int activePlayer = 1;
-    protected PlayerTag activePlayerInput = PlayerTag.human;
+    protected PlayerTag activePlayerInput = this.player1Tag;
     protected int activePlayerLetter = Board.PLAYER_1;
     protected String activePlayerLabel = "Player 1";
     protected Player activePlayerAI = this.player1;

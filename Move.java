@@ -83,28 +83,28 @@ public class Move
     }
 
     public Move northWest(){
-        return new Move(this.row + 1, this.col - 1);
+        return new Move(this.row - 1, this.col - 1);
     }
 
     public Move north(){
-        return new Move(this.row + 1, this.col);
+        return new Move(this.row - 1, this.col);
     }
 
     public Move northEast(){
-        return new Move(this.row + 1, this.col + 1);
+        return new Move(this.row - 1, this.col + 1);
     }
 
     public Move east(){
         return new Move(this.row, this.col + 1);
     }
     public Move southEast(){
-        return new Move(this.row - 1, this.col + 1);
+        return new Move(this.row + 1, this.col + 1);
     }
     public Move south(){
-        return new Move(this.row - 1, this.col);
+        return new Move(this.row + 1, this.col);
     }
     public Move southWest(){
-        return new Move(this.row - 1, this.col - 1);
+        return new Move(this.row + 1, this.col - 1);
     }
 
 
@@ -143,5 +143,10 @@ public class Move
             return true;
         }
         return false;
+    }
+
+    @Override
+    public String toString(){
+        return "row: " + this.row + ", column: " + this.col;
     }
 }

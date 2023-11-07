@@ -17,8 +17,8 @@ class Board
     public static final int PLAYER_1 = 1;
     public static final int PLAYER_2 = -1;
 
-    private int player1score = 0;
-    private int player2score = 0;
+    private int player1score = 2;
+    private int player2score = 2;
 
     public static final int DEFAULT_DIMENTION = 8;
     public static final int DEFAULT_MAX_DEPTH = 8;
@@ -289,11 +289,15 @@ class Board
         this.lastMove = move;
         this.lastPlayer = playerLetter;
         ArrayList<Move> capturedPawns = this.capturedPawnsFrom(move, playerLetter);
+        for (Move move2 : capturedPawns) {
+            System.out.println(move2.toString());
+        }
         if (playerLetter == PLAYER_1) {
-            this.player1score += capturedPawns.size() + 1;
-            this.player2score -= capturedPawns.size() - 1;
+            this.player1score += (capturedPawns.size() + 1);
+            this.player2score -= (capturedPawns.size());
         } else {
-
+            this.player1score -= (capturedPawns.size());
+            this.player2score += (capturedPawns.size() + 1);
         }
         for (Move capture : capturedPawns) {
             this.gameBoard[capture.getRow()][capture.getCol()] = playerLetter;

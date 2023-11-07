@@ -29,14 +29,16 @@ public class GamePanel extends JPanel implements ActionListener, Config{
 
 
     public void updateLabels(){
-        this.humanScoreLabel.setText("Human: " + this.parent.humanScore);
-        this.AIScoreLabel.setText(this.parent.AIScore + " :AI");
+        System.out.println(this.parent.board.getPlayer1Score());
+        this.humanScoreLabel.setText("Player 1: " + this.parent.board.getPlayer1Score());
+        this.AIScoreLabel.setText(this.parent.board.getPlayer2Score() + " : Player 2");
         this.activePlayer.setText(this.parent.activePlayerLabel);
     }
 
     public GamePanel(Reversi parent){
         super(new GridBagLayout());
         this.parent = parent;
+        this.parent.board = new Board();
         this.setBackground(Config.BG_COLOR);
 
         this.goToMainMenuConstraints = new GridBagConstraints(0, 0, 1, 1, 0.3, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
@@ -58,7 +60,7 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         this.goToMainMenu.setActionCommand("goToMenu");
         this.add(this.goToMainMenu, this.goToMainMenuConstraints);
 
-        this.humanScoreLabel = new JLabel("Human: " + this.parent.humanScore);
+        this.humanScoreLabel = new JLabel("Player 1: " + this.parent.board.getPlayer1Score());
         this.humanScoreLabel.setFont(Config.TEXT_FONT);
         this.add(this.humanScoreLabel, this.humanScoreLabelConstraints);
 
@@ -66,7 +68,7 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         this.activePlayer.setFont(Config.TEXT_FONT);
         this.add(this.activePlayer, this.activePlayerConstraints);
 
-        this.AIScoreLabel = new JLabel(this.parent.AIScore + " :AI", JLabel.RIGHT);
+        this.AIScoreLabel = new JLabel(this.parent.board.getPlayer2Score() + " :Player 2" + this.parent.player2Name, JLabel.RIGHT);
         this.AIScoreLabel.setFont(Config.TEXT_FONT);
         this.add(this.AIScoreLabel, this.AIScoreLabelConstraints);
 
@@ -81,11 +83,18 @@ public class GamePanel extends JPanel implements ActionListener, Config{
 
         this.placePawn = new JButton("Place Pawn");
         this.placePawn.setFont(Config.SETTINGS_FONT);
+        this.placePawn.addActionListener(this);
+        this.placePawn.setActionCommand("place");
     }
 
     public void setupNewGame(){
         this.parent.board = new Board(this.parent.dim);
         this.parent.posibleMoves = new ArrayList<>();
+        this.parent.previewPawns = new ArrayList<>();
+        this.parent.activePlayer = 1;
+        this.parent.activePlayerInput = this.parent.player1Tag;
+        this.parent.activePlayerLetter = Board.PLAYER_1;
+        this.parent.activePlayerLabel = "Player 1";
         this.parent.player1 = new Player(Board.DEFAULT_MAX_DEPTH, Board.PLAYER_1);
         this.parent.player2 = new Player(Board.DEFAULT_MAX_DEPTH, Board.PLAYER_2);
         this.gameGrid = new JButton[this.parent.dim][this.parent.dim];
@@ -110,11 +119,12 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         }else{
             this.remove(this.placePawn);
         }
-
+        this.updatePawns();
+        this.updateLabels();
         this.nextMove();
     }
 
-    public void updatePawns(){
+    public synchronized void updatePawns(){
         for (int i = 0; i < this.parent.dim; i++) {
             for (int j = 0; j < this.parent.dim; j++) {
                 switch (this.parent.board.getPawn(i, j)) {
@@ -132,40 +142,64 @@ public class GamePanel extends JPanel implements ActionListener, Config{
                 }
             }
         }
-        if(this.parent.activePlayerInput == PlayerTag.human){
-            for (Move pawn : this.parent.posibleMoves) {
-                this.gameGrid[pawn.getRow()][pawn.getCol()].setIcon(new ImageIcon(this.parent.POSIBLE_MOVE));
-            }
+    }
+
+    public synchronized void updatePosibleMoves(){
+        for (Move pawn : this.parent.posibleMoves) {
+            this.gameGrid[pawn.getRow()][pawn.getCol()].setIcon(new ImageIcon(this.parent.POSIBLE_MOVE));
+        }
+    }
+
+    public synchronized void removePosibleMoves(){
+        for (Move pawn : this.parent.posibleMoves) {
+            this.gameGrid[pawn.getRow()][pawn.getCol()].setIcon(new ImageIcon(this.parent.EMPTY_PAWN));
+        }
+    }
+
+    public synchronized void updatePreviewPawns(){
+        Icon icon;
+        if (this.parent.activePlayerLetter == -1) {
+            icon = new ImageIcon(this.parent.PLAYER1PAWN);
+        } else {
+            icon = new ImageIcon(this.parent.PLAYER2PAWN);
+        }
+        for (Move pawn : this.parent.previewPawns) {
+            this.gameGrid[pawn.getRow()][pawn.getCol()].setIcon(icon);
         }
     }
 
     private void nextMove(){
+        System.out.println(this.parent.activePlayerInput);
         if (this.parent.board.isTerminal()) {
             finishGame();
         }
         this.parent.posibleMoves = this.parent.board.findPossibleMoves(this.parent.activePlayerLetter);
         if (this.parent.posibleMoves.isEmpty()) {
             changePlayer();
+            this.parent.posibleMoves = this.parent.board.findPossibleMoves(this.parent.activePlayerLetter);
         }
+        if (this.parent.activePlayerInput == PlayerTag.AI) {
+            this.parent.nextMove = this.parent.activePlayerAI.getMove(this.parent.board);
+            this.placeMove();
+        } else {
+            this.updatePosibleMoves();
+        }
+    }
+
+    private synchronized void finishGame(){
+
+    }
+
+    private synchronized void placeMove(){
+        this.removePosibleMoves();
+        this.parent.board.makeMove(this.parent.nextMove, this.parent.activePlayerLetter);
+        this.changePlayer();
         this.updatePawns();
         this.updateLabels();
-        if (this.parent.activePlayerInput == PlayerTag.AI) {
-            this.placeMove(this.parent.activePlayerAI.getMove(this.parent.board));
-            this.nextMove();
-        }
-    }
-
-    private void finishGame(){
-
-    }
-
-    private void placeMove(Move move){
-        this.parent.board.makeMove(move, this.parent.activePlayerLetter);
-        this.changePlayer();
         this.nextMove();
     }
 
-    private void changePlayer(){
+    private synchronized void changePlayer(){
         if (this.parent.activePlayer == 1) {
             this.parent.activePlayer = 2;
             this.parent.activePlayerInput = this.parent.player2Tag;
@@ -183,12 +217,23 @@ public class GamePanel extends JPanel implements ActionListener, Config{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand() == "place") {
+            if (this.parent.previewMove) {
+                placeMove();
+            }
+            return;
+        }
         String[] command = e.getActionCommand().split("-");
         Move move = new Move(Integer.parseInt(command[0]), Integer.parseInt(command[1]));
         if (this.parent.activePlayerInput == PlayerTag.human) {
             for (Move posibleMove : this.parent.posibleMoves) {
                 if (move.equals(posibleMove)) {
-                    placeMove(move);
+                    this.parent.nextMove = move;
+                    this.removePosibleMoves();
+                    this.updatePreviewPawns();
+                    if (!this.parent.previewMove) {
+                        placeMove();
+                    }
                 }
             }
         }
