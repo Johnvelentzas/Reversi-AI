@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 
 
@@ -21,7 +20,8 @@ class Board
     private int player1score = 0;
     private int player2score = 0;
 
-    public static final int DEFAULT_DIMENTION = 7;
+    public static final int DEFAULT_DIMENTION = 8;
+    public static final int DEFAULT_MAX_DEPTH = 8;
 
     private int[][] gameBoard;
 
@@ -121,22 +121,9 @@ class Board
     }
 	
 	public boolean isTerminal() {
-        Boolean isFull = true;
-        outer:
-        for (int i = 0; i < gameBoard.length; i++) {
-            for (int j = 0; j < gameBoard.length; j++) {
-                if (this.gameBoard[i][j] == EMPTY) {
-                    isFull = false;
-                    break outer;
-                }
-            }
-        }
-        if (isFull) {
+        if (this.findPossibleMoves(PLAYER_1).isEmpty() && this.findPossibleMoves(PLAYER_2).isEmpty()) {
             return true;
         }
-
-        //TODO add more terminal conditions --> ΣΚΟΡ 0 ΓΙΑ ΚΑΠΟΙΟΝ ΠΑΙΧΤΗ, ΝΑ ΠΑΙΞΟΥΝ ΠΑΣΟ ΔΥΟ ΦΟΡΕΣ ΣΥΝΕΧΟΜΕΝΑ ΔΙΑΦΟΡΕΤΙΚΟΙ ΠΑΙΧΤΕΣ (ΧΡΗΣΗ ΣΥΝΑΡΤΗΣΗΣ capturePawns ΠΙΟ ΚΑΤΩ)
-
         return false;
     }
 	
@@ -281,13 +268,11 @@ class Board
     }
 
     /**
-     * Places the player Pawn in the {@code Board} in the location of the move if its empty and within bounds.
+     * Places the player Pawn in the {@code Board} in the location of the move if its empty and within bounds. Captures enemy pawns.
      * @param move the {@link Move move} object.
      * @param playerLetter the int representation of the pawn of the player.
      */
     public void makeMove(Move move, int playerLetter) {
-        int row = move.getRow();
-        int col = move.getCol();
     
         // Check if the move is within the board boundaries
         if (!isMoveInBoard(move)) {
@@ -301,17 +286,19 @@ class Board
             throw new IllegalArgumentException("ERROR: THE CELL IS NOT EMPTY IN makeMove FUNCTION");
         }
 
-        gameBoard[row][col] = playerLetter;
-    
-        // TODO update the opponent's captured pieces
-        
-    
-        // TODO update the score
+        this.lastMove = move;
+        this.lastPlayer = playerLetter;
+        ArrayList<Move> capturedPawns = this.capturedPawnsFrom(move, playerLetter);
+        if (playerLetter == PLAYER_1) {
+            this.player1score += capturedPawns.size() + 1;
+            this.player2score -= capturedPawns.size() - 1;
+        } else {
 
-
-        // TODO set the last move
-
-        // TODO ΝΑ ΑΛΛΑΖΕΙ ΤΟΝ ΠΙΝΑΚΑ ??????
+        }
+        for (Move capture : capturedPawns) {
+            this.gameBoard[capture.getRow()][capture.getCol()] = playerLetter;
+        }
+        this.gameBoard[move.getRow()][move.getCol()] = playerLetter;
     }
 
 

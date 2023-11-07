@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 class Player
 {
@@ -11,6 +12,12 @@ class Player
     {
         this.maxDepth = maxDepth;
         this.playerLetter = playerLetter;
+    }
+
+    public Move getMove(Board board){
+        ArrayList<Move> moves = board.findPossibleMoves(this.playerLetter);
+        Random rand = new Random();
+        return moves.get(rand.nextInt(moves.size()));
     }
 
     private int utility_Funtion(Board board) { //to be used in minimax algorithm after checking for terminal states

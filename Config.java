@@ -3,7 +3,7 @@ import java.awt.Font;
 
 public interface Config {
 
-    enum Player{
+    enum PlayerTag{
         human,
         AI
     }

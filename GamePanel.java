@@ -86,6 +86,8 @@ public class GamePanel extends JPanel implements ActionListener, Config{
     public void setupNewGame(){
         this.parent.board = new Board(this.parent.dim);
         this.parent.posibleMoves = new ArrayList<>();
+        this.parent.player1 = new Player(Board.DEFAULT_MAX_DEPTH, Board.PLAYER_1);
+        this.parent.player2 = new Player(Board.DEFAULT_MAX_DEPTH, Board.PLAYER_2);
         this.gameGrid = new JButton[this.parent.dim][this.parent.dim];
         this.innerPanel.removeAll();
         this.gridPanel = new JPanel(new GridLayout(this.parent.dim, this.parent.dim));
@@ -130,8 +132,10 @@ public class GamePanel extends JPanel implements ActionListener, Config{
                 }
             }
         }
-        for (Move pawn : this.parent.posibleMoves) {
-            this.gameGrid[pawn.getRow()][pawn.getCol()].setIcon(new ImageIcon(this.parent.POSIBLE_MOVE));
+        if(this.parent.activePlayerInput == PlayerTag.human){
+            for (Move pawn : this.parent.posibleMoves) {
+                this.gameGrid[pawn.getRow()][pawn.getCol()].setIcon(new ImageIcon(this.parent.POSIBLE_MOVE));
+            }
         }
     }
 
@@ -139,14 +143,16 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         if (this.parent.board.isTerminal()) {
             finishGame();
         }
-        if (this.parent.activePlayerInput == Player.human ) {
-            this.parent.posibleMoves = this.parent.board.findPossibleMoves(this.parent.activePlayerLetter);
-        } else{
-            this.parent.posibleMoves.clear();
+        this.parent.posibleMoves = this.parent.board.findPossibleMoves(this.parent.activePlayerLetter);
+        if (this.parent.posibleMoves.isEmpty()) {
+            changePlayer();
         }
         this.updatePawns();
-
-
+        this.updateLabels();
+        if (this.parent.activePlayerInput == PlayerTag.AI) {
+            this.placeMove(this.parent.activePlayerAI.getMove(this.parent.board));
+            this.nextMove();
+        }
     }
 
     private void finishGame(){
@@ -155,25 +161,31 @@ public class GamePanel extends JPanel implements ActionListener, Config{
 
     private void placeMove(Move move){
         this.parent.board.makeMove(move, this.parent.activePlayerLetter);
+        this.changePlayer();
+        this.nextMove();
+    }
+
+    private void changePlayer(){
         if (this.parent.activePlayer == 1) {
             this.parent.activePlayer = 2;
-            this.parent.activePlayerInput = this.parent.player2;
+            this.parent.activePlayerInput = this.parent.player2Tag;
             this.parent.activePlayerLetter = Board.PLAYER_2;
             this.parent.activePlayerLabel = "Player 2";
+            this.parent.activePlayerAI = this.parent.player2;
         } else {
             this.parent.activePlayer = 1;
-            this.parent.activePlayerInput = this.parent.player1;
+            this.parent.activePlayerInput = this.parent.player1Tag;
             this.parent.activePlayerLetter = Board.PLAYER_1;
             this.parent.activePlayerLabel = "Player 1";
+            this.parent.activePlayerAI = this.parent.player1;
         }
-        this.nextMove();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String[] command = e.getActionCommand().split("-");
         Move move = new Move(Integer.parseInt(command[0]), Integer.parseInt(command[1]));
-        if (this.parent.activePlayerInput == Player.human) {
+        if (this.parent.activePlayerInput == PlayerTag.human) {
             for (Move posibleMove : this.parent.posibleMoves) {
                 if (move.equals(posibleMove)) {
                     placeMove(move);

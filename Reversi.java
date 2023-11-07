@@ -28,17 +28,21 @@ public class Reversi extends JPanel implements ActionListener, Config{
     protected Board board;
     protected ArrayList<Move> posibleMoves;
 
-    protected int dim = 8;
+    protected int dim = Board.DEFAULT_DIMENTION;
+    protected int maxDepth = Board.DEFAULT_MAX_DEPTH;
     protected String currPanel = "menu";
     protected String lastPanel = "menu";
     protected int humanScore = 0;
     protected int AIScore = 0;
-    protected Player player1 = Player.human;
-    protected Player player2 = Player.AI;
+    protected PlayerTag player1Tag = PlayerTag.human;
+    protected Player player1;
+    protected Player player2;
+    protected PlayerTag player2Tag = PlayerTag.AI;
     protected int activePlayer = 1;
-    protected Player activePlayerInput = Player.human;
+    protected PlayerTag activePlayerInput = PlayerTag.human;
     protected int activePlayerLetter = Board.PLAYER_1;
     protected String activePlayerLabel = "Player 1";
+    protected Player activePlayerAI = this.player1;
     protected String player1Name = "Human";
     protected String player2Name = "AI";
     protected int colorSelection = 0;
@@ -146,23 +150,23 @@ public class Reversi extends JPanel implements ActionListener, Config{
                 this.menuPanel.updateLabels();
                 break;
             case "toggle1": 
-                if (this.player1 == Player.human) {
-                    this.player1 = Player.AI;
-                    this.activePlayerInput = Player.AI;
+                if (this.player1Tag == PlayerTag.human) {
+                    this.player1Tag = PlayerTag.AI;
+                    this.activePlayerInput = PlayerTag.AI;
                     this.player1Name = "AI";
                 }else{
-                    this.player1 = Player.human;
-                    this.activePlayerInput = Player.human;
+                    this.player1Tag = PlayerTag.human;
+                    this.activePlayerInput = PlayerTag.human;
                     this.player1Name = "Human";
                 }
                 this.menuPanel.updateLabels();
                 break;
             case "toggle2": 
-                if (this.player2 == Player.human) {
-                    this.player2 = Player.AI;
+                if (this.player2Tag == PlayerTag.human) {
+                    this.player2Tag = PlayerTag.AI;
                     this.player2Name = "AI";
                 }else{
-                    this.player2 = Player.human;
+                    this.player2Tag = PlayerTag.human;
                     this.player2Name = "Human";
                 }
                 this.menuPanel.updateLabels();
