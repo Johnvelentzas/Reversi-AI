@@ -20,6 +20,12 @@ class Board
     private int player1score = 2;
     private int player2score = 2;
 
+    public int player1edgePawns = 0;
+    public int player2edgePawns = 0;
+
+    public int NumberOfMoves1;
+    public int NumberOfMoves2;
+
     public static final int DEFAULT_DIMENTION = 8;
     public static final int DEFAULT_MAX_DEPTH = 8;
 
@@ -35,7 +41,8 @@ class Board
     /**
      * Default board constructor. Creates an {@code empty} board with the default dimentions
      */
-    public Board() {
+    public Board() 
+    {
         create_board(DEFAULT_DIMENTION);
     }
 	
@@ -43,7 +50,8 @@ class Board
      * Basic board constructor. Creates an {@code empty} board with the given dimentions
      * @param dim   x and y dimention.
      */
-	public Board(int dimentions) {
+	public Board(int dimentions) 
+    {
         create_board(dimentions);
     }
 
@@ -51,7 +59,8 @@ class Board
      * Internal constructor.
      * @param dimentions x and y dimentions
      */
-    private void create_board(int dimentions) {
+    private void create_board(int dimentions) 
+    {
         this.dimension = dimentions;
         this.gameBoard = new int[dimentions][dimentions];
         for (int i = 0; i < this.dimension; i++) {
@@ -80,7 +89,8 @@ class Board
 	/**
      * Copy constructor.
      */
-    public Board(Board board) {
+    public Board(Board board) 
+    {
         this.dimension = board.dimension;
         this.gameBoard = new int[this.dimension][this.dimension];
         this.setGameBoard(board.gameBoard);
@@ -98,7 +108,8 @@ class Board
      *            6|E|E|E|E|E|E|E|E|
      *            7|E|E|E|E|E|E|E|E|
      */
-	public void print() {
+	public void print() 
+    {
         System.out.println(this.toString());
     }
 
@@ -116,11 +127,33 @@ class Board
     
  //ΕΥΡΕΤΙΚΗ ΣΥΝΑΡΤΗΣΗ --> ΧΡΗΣΙΜΟΠΟΙΕΙΤΑΙ ΑΝΤΙ ΓΙΑ ΤΗΝ UTILITY ΟΤΑΝ Ο ΧΡΗΣΤΗΣ ΔΙΝΕΙ ΜΙΚΡΟΤΕΡΟ ΒΑΘΟΣ ΑΠΟ ΤΟ ΟΛΙΚΟ ΠΟΥ ΧΡΕΙΑΖΕΤΑΙ
  //ΘΑ ΧΡΕΙΑΣΤΕΙ ΝΑ ΠΑΡΕΙ ΤΙΜΕΣ ΜΕ GET ΣΥΝΑΡΤΗΣΗ ΑΠΟ ΤΗΝ MAIN Ή ΤΗ ΔΙΕΠΑΦΗ ΓΙΑ ΝΑ ΕΦΑΡΜΟΣΤΕΙ
-	public int evaluate() {
-         return 0;   
+public int evaluate() 
+{
+    int totalPoints;
+    int f1; //total player pawns on board - total opponent pawns
+    int f2; //total player pawn safe on corners - the opponent's ones
+    int f3; //total pawns not in corners - the opponent's ones
+    int f4; //total available moves
+
+    if (this.lastPlayer == 1) {
+        f1 = player1score - player2score;
+        f2 = player1edgePawns - player2edgePawns;
+        f3 = (player1score - player1edgePawns) - (player2score - player2edgePawns);
+        f4 = NumberOfMoves1;
     }
+    else {
+        f1 = player2score - player1score;
+        f2 = player2edgePawns - player1edgePawns;
+        f3 = (player2score - player2edgePawns) - (player1score - player1edgePawns);
+        f4 = NumberOfMoves2;        
+    }
+
+    totalPoints = f1 + (3*f2) + (int)(java.lang.Math.floor(f3/2)) + (2*f4);
+    return totalPoints;
+}
 	
-	public boolean isTerminal() {
+	public boolean isTerminal() 
+    {
         if (this.findPossibleMoves(PLAYER_1).isEmpty() && this.findPossibleMoves(PLAYER_2).isEmpty()) {
             return true;
         }
@@ -137,11 +170,13 @@ class Board
         return this.lastPlayer;
     }
 
-    public int getPlayer1Score(){
+    public int getPlayer1Score()
+    {
         return this.player1score;
     }
 
-    public int getPlayer2Score(){
+    public int getPlayer2Score()
+    {
         return this.player2score;
     }
 
@@ -151,7 +186,8 @@ class Board
     }
 
     
-    public int getDimention() {
+    public int getDimention() 
+    {
         return this.dimension;
     }
 	
@@ -161,7 +197,8 @@ class Board
      * @param col the column.
      * @return {@code true} if the coordinates are within the board else {@code false}.
      */
-    public Boolean isMoveInBoard(int row, int col) {
+    public Boolean isMoveInBoard(int row, int col) 
+    {
         if (row < 0 || row >= dimension || col < 0 || col >= dimension) {
             return false;
         }
@@ -174,7 +211,8 @@ class Board
      * @return {@code true} if the coordinates are within the board else {@code false}.
      * @see {@link Move the move class}
      */
-    public Boolean isMoveInBoard(Move move){
+    public Boolean isMoveInBoard(Move move)
+    {
         if (move.getRow() < 0 || move.getRow() >= dimension || move.getCol() < 0 || move.getCol() >= dimension) {
             return false;
         }
@@ -187,7 +225,8 @@ class Board
      * @param col the column value
      * @return the integer representation of the pawn in the board at the given row and column.
      */
-    public int getPawn(int row, int col) {
+    public int getPawn(int row, int col) 
+    {
         if (!isMoveInBoard(row, col)) {
             System.out.println("ERROR: WRONG COORDINATES GIVEN");
             throw new UncheckedIOException(new IOException());
@@ -201,7 +240,8 @@ class Board
      * @return the integer representation of the pawn in the board at the given {@link Move move} object location.
      * @see {@link Move the move class}
      */
-    public int getPawn(Move move) {
+    public int getPawn(Move move) 
+    {
         if (!isMoveInBoard(move)) {
             System.out.println("ERROR: WRONG COORDINATES GIVEN");
             System.exit(0);
@@ -237,7 +277,8 @@ class Board
         this.lastPlayer = lastPlayer;
     }
 
-    public String toString(){
+    public String toString()
+    {
         String result = "Reversi|";
         for (int i = 0; i < gameBoard.length; i++) {
             result += i + "|";
@@ -272,7 +313,8 @@ class Board
      * @param move the {@link Move move} object.
      * @param playerLetter the int representation of the pawn of the player.
      */
-    public void makeMove(Move move, int playerLetter) {
+    public void makeMove(Move move, int playerLetter) 
+    {
     
         // Check if the move is within the board boundaries
         if (!isMoveInBoard(move)) {
@@ -303,13 +345,23 @@ class Board
             this.gameBoard[capture.getRow()][capture.getCol()] = playerLetter;
         }
         this.gameBoard[move.getRow()][move.getCol()] = playerLetter;
+
+        //increase counter of edge pawns (used in evaluate() function)
+        if (playerLetter == 1 && checkIfOnEdge(move)) {
+            player1edgePawns++;
+        }
+        else if (playerLetter == -1 && checkIfOnEdge(move)) {
+            player2edgePawns++;
+        }
     }
 
 
     
-    public ArrayList<Move> findPossibleMoves(int playerLetter) { //returns an array list of all the possible moves for a specific player
+    public ArrayList<Move> findPossibleMoves(int playerLetter) //returns an array list of all the possible moves for a specific player
+    { 
         ArrayList<Move> possibleMoves = new ArrayList<>();
-
+        this.NumberOfMoves1 = 0;
+        this.NumberOfMoves2 = 0;
         for (int row = 0; row < dimension; row++) {
             for (int col = 0; col < dimension; col++) {
                 Move move = new Move(row, col);
@@ -318,10 +370,18 @@ class Board
                 } 
             }
         }
+        if (playerLetter == 1) {
+            this.NumberOfMoves1 = possibleMoves.size(); 
+        }
+        else if (playerLetter == 2) {
+            this.NumberOfMoves2 = possibleMoves.size();
+        }
+        
         return possibleMoves;
     }
     
-    private boolean isLegalMove(Move move, int playerLetter) {
+    private boolean isLegalMove(Move move, int playerLetter) 
+    {
         
         if (!isMoveInBoard(move)) {return false;} // Check if the move is in the board boundaries
     
@@ -331,7 +391,8 @@ class Board
     }
 
     //helper funtion for capturePawns (for code optimization): changes rows and columns according to the directions we are searching
-    public ArrayList<Move> capturedPawnsFrom(Move move, int playerLetter){
+    public ArrayList<Move> capturedPawnsFrom(Move move, int playerLetter)
+    {
         ArrayList<Move> capturedPawns = new ArrayList<>();
         capturedPawns.addAll(capturedPawnsFrom(move, playerLetter, Move.Direction.East));
         capturedPawns.addAll(capturedPawnsFrom(move, playerLetter, Move.Direction.North));
@@ -345,7 +406,8 @@ class Board
     }
 
 
-    public ArrayList<Move> capturedPawnsFrom(Move move, int playerLetter, Move.Direction dir){
+    public ArrayList<Move> capturedPawnsFrom(Move move, int playerLetter, Move.Direction dir)
+    {
         ArrayList<Move> capturedPawns = new ArrayList<>();
         while (this.isMoveInBoard(move.getDir(dir))) {
             move = move.getDir(dir);
@@ -360,5 +422,25 @@ class Board
         }
         capturedPawns.clear();
         return capturedPawns;
+    }
+
+    public boolean checkIfOnEdge(Move move)
+    {
+        int row = move.getRow();
+        int col = move.getCol();
+
+        //check left edge
+        if (col == 0) {return true;}
+
+        //check right edge
+        else if (col == this.dimension) {return true;}
+
+        //check up edge
+        else if (row == 0) {return true;}
+
+        //check down edge
+        else if (row == this.dimension) {return true;}
+
+        else {return false;}
     }
 }
