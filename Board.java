@@ -154,10 +154,7 @@ public int evaluate()
 	
 	public boolean isTerminal() 
     {
-        if (this.findPossibleMoves(PLAYER_1).isEmpty() && this.findPossibleMoves(PLAYER_2).isEmpty()) {
-            return true;
-        }
-        return false;
+        return this.findPossibleMoves(PLAYER_1).isEmpty() && this.findPossibleMoves(PLAYER_2).isEmpty();
     }
 	
 	public Move getLastMove()
@@ -199,10 +196,8 @@ public int evaluate()
      */
     public Boolean isMoveInBoard(int row, int col) 
     {
-        if (row < 0 || row >= dimension || col < 0 || col >= dimension) {
-            return false;
-        }
-        return true;
+        return !(row < 0 || row >= dimension || col < 0 || col >= dimension);
+
     }
 
     /**
@@ -213,10 +208,7 @@ public int evaluate()
      */
     public Boolean isMoveInBoard(Move move)
     {
-        if (move.getRow() < 0 || move.getRow() >= dimension || move.getCol() < 0 || move.getCol() >= dimension) {
-            return false;
-        }
-        return true;
+        return !(move.getRow() < 0 || move.getRow() >= dimension || move.getCol() < 0 || move.getCol() >= dimension);
     }
 
     /**
