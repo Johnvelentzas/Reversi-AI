@@ -28,18 +28,26 @@ class Player
 
         int playerPieces = 0;
         int opponentPieces = 0;
-    
-        for (int row = 0; row < board.getDimention(); row++) {
-            for (int col = 0; col < board.getDimention(); col++) {
-                if (board.getPawn(row, col) == playerLetter) {
-                    playerPieces++;
-                } 
-                else if (board.getPawn(row, col) == opponent) {
-                    opponentPieces++;
+        
+        //utility function can only be used if we are on a terminal state of the board
+        if (board.isTerminal()) {
+            for (int row = 0; row < board.getDimention(); row++) {
+                for (int col = 0; col < board.getDimention(); col++) {
+                    if (board.getPawn(row, col) == playerLetter) {
+                        playerPieces++;
+                    } 
+                    else if (board.getPawn(row, col) == opponent) {
+                        opponentPieces++;
+                    }
                 }
             }
+            return playerPieces-opponentPieces;
         }
-        return playerPieces-opponentPieces;
+
+        //evaluate function is used when the board is at a non terminal state
+        else {
+            return board.evaluate();
+        }
     }
     
 	

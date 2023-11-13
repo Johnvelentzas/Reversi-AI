@@ -114,43 +114,64 @@ class Board
     }
 
 
-	
-	ArrayList<Board> getChildren(int letter) {return null;}
-	// ΤΟΛΗ ΑΥΤΗ ΚΑΝΕ ΟΣΟ ΜΠΟΡΕΙΣ :)
-/**
- ΘΑ ΠΡΕΠΕΙ ΝΑ ΕΠΙΣΤΡΕΦΕΙ ΜΙΑ ΛΙΣΤΑ ΑΠΟ ΠΙΝΑΚΕΣ ΠΟΥ ΘΑ ΕΙΝΑΙ ΤΑ ΠΑΙΔΙΑ ΤΟΥ ΚΟΜΒΟΥ ΜΑΣ (ΤΟΥ ΠΙΝΑΚΑ ΣΤΟΝ ΟΠΟΙΟ ΤΗΝ ΕΦΑΡΜΟΖΟΥΜΕ).
- ΤΑ ΠΑΙΔΙΑ ΑΥΤΑ ΘΑ ΕΙΝΑΙ ΚΑΤΑΣΤΑΣΕΙΣ ΠΙΝΑΚΩΝ ΜΕΤΑ ΑΠΟ !!!ΚΑΘΕ!!! ΔΥΝΑΤΗ ΚΙΝΗΣΗ ΠΟΥ ΜΠΟΡΕΙ ΝΑ ΚΑΝΕΙ Ο ΣΥΓΚΕΚΡΙΜΕΝΟΣ ΠΑΙΧΤΗΣ
- (ΤΟΝ ΠΑΙΡΝΟΥΜΕ ΑΠΟ ΤΟ ΟΡΙΣΜΑ ΠΟΥ ΕΧΕΙ Η ΣΥΝΑΡΤΗΣΗ ΚΑΙ ΤΗΝ ΕΦΑΡΜΟΖΟΥΜΕ ΠΑΝΩ ΣΕ ΠΙΝΑΚΑ). ΑΡΑ ΘΑ ΠΡΕΠΕΙ ΝΑ ΕΧΟΥΝ ΑΛΛΑΞΕΙ ΚΑΙ ΤΑ 
- ΠΙΟΝΙΑ ΤΟΥ ΑΝΤΙΠΑΛΟΥ ΠΟΥ ΘΑ ΚΛΕΒΕΙ Ο ΠΑΙΧΤΗΣ ΜΕ ΤΗΝ ΚΑΘΕ ΚΙΝΗΣΗ. ΜΠΟΡΕΙΣ ΒΟΗΘΗΤΙΚΑ ΝΑ ΧΡΗΣΙΜΟΠΟΙΗΣΕΙΣ ΤΗΝ @findPossibleMoves 
- ΠΟΥ ΕΧΕΙ ΥΛΟΠΟΙΗΘΕΙ ΠΙΟ ΚΑΤΩ
- */
-    
- //ΕΥΡΕΤΙΚΗ ΣΥΝΑΡΤΗΣΗ --> ΧΡΗΣΙΜΟΠΟΙΕΙΤΑΙ ΑΝΤΙ ΓΙΑ ΤΗΝ UTILITY ΟΤΑΝ Ο ΧΡΗΣΤΗΣ ΔΙΝΕΙ ΜΙΚΡΟΤΕΡΟ ΒΑΘΟΣ ΑΠΟ ΤΟ ΟΛΙΚΟ ΠΟΥ ΧΡΕΙΑΖΕΤΑΙ
- //ΘΑ ΧΡΕΙΑΣΤΕΙ ΝΑ ΠΑΡΕΙ ΤΙΜΕΣ ΜΕ GET ΣΥΝΑΡΤΗΣΗ ΑΠΟ ΤΗΝ MAIN Ή ΤΗ ΔΙΕΠΑΦΗ ΓΙΑ ΝΑ ΕΦΑΡΜΟΣΤΕΙ
-public int evaluate() 
-{
-    int totalPoints;
-    int f1; //total player pawns on board - total opponent pawns
-    int f2; //total player pawn safe on corners - the opponent's ones
-    int f3; //total pawns not in corners - the opponent's ones
-    int f4; //total available moves
+	/**    
+    * Get children of the current board state for a specific player.*
+    * @param playerLetter The player for whom to generate children.
+    * @return A list of Board objects representing the possible children.
+    */
+	ArrayList<Board> getChildren(int playerLetter) 
+    {
+        ArrayList<Board> children = new ArrayList<>();
+        // Get all possible moves for the player
+        ArrayList<Move> possibleMoves = findPossibleMoves(playerLetter);
 
-    if (this.lastPlayer == 1) {
-        f1 = player1score - player2score;
-        f2 = player1edgePawns - player2edgePawns;
-        f3 = (player1score - player1edgePawns) - (player2score - player2edgePawns);
-        f4 = NumberOfMoves1;
-    }
-    else {
-        f1 = player2score - player1score;
-        f2 = player2edgePawns - player1edgePawns;
-        f3 = (player2score - player2edgePawns) - (player1score - player1edgePawns);
-        f4 = NumberOfMoves2;        
+        // Generate a new board state for each possible move
+        for (Move move : possibleMoves) {
+            // Create a copy of the current board
+            Board childBoard = new Board(this);
+
+            // Make the move on the copied board
+            childBoard.makeMove(move, playerLetter);
+
+            // Add the new board state to the list of children
+            children.add(childBoard);
+        }
+
+        return children;
     }
 
-    totalPoints = f1 + (3*f2) + (int)(java.lang.Math.floor(f3/2)) + (2*f4);
-    return totalPoints;
-}
+
+
+	/**    
+    * Evaluate function for a non terminal state of the board.
+    * Used instad of the utility function to give an approximation of the computation
+    * @return An integer to show how much points a player can earn by making a specific move
+    * Used in minimax function (Player.java)
+    */
+    public int evaluate() 
+    {
+        int totalPoints;
+        int f1; //total player pawns on board - total opponent pawns
+        int f2; //total player pawn safe on corners - the opponent's ones
+        int f3; //total pawns not in corners - the opponent's ones
+        int f4; //total available moves
+
+        if (this.lastPlayer == 1) {
+            f1 = player1score - player2score;
+            f2 = player1edgePawns - player2edgePawns;
+            f3 = (player1score - player1edgePawns) - (player2score - player2edgePawns);
+            f4 = NumberOfMoves1;
+        }
+        else {
+            f1 = player2score - player1score;
+            f2 = player2edgePawns - player1edgePawns;
+            f3 = (player2score - player2edgePawns) - (player1score - player1edgePawns);
+            f4 = NumberOfMoves2;        
+        }
+
+        totalPoints = f1 + (3*f2) + (int)(java.lang.Math.floor(f3/2)) + (2*f4);
+        return totalPoints;
+    }
 	
 	public boolean isTerminal() 
     {
