@@ -61,23 +61,27 @@ class Player
             Board newBoard = new Board(board); // Create a copy of the current board
 
             // TODO USE getChildren METHOD TO FIND ALL POSIBLE MOVES 
+            ArrayList<Board> children = newBoard.getChildren(playerSymbol);
 
-            //ΜΗΝ ΧΡΗΣΙΜΟΠΟΙΗΣΕΙΣ ΤΑ ΑΠΟ ΚΑΤΩ ΜΠΟΡΕΙ ΝΑ ΕΙΝΑΙ ΛΑΘΟΣ :( !!!!!!!!!!!!!!!!!!!!!!!!!!! (ΤΟΛΗ)
-            //newBoard.makeMove(move, playerLetter); // Creates a new board according to each possible move --> we search all these for the best one
-            //int score = max(newBoard, maxDepth - 1); CALL MIN OR MAX ??? depth is given by the player
+            newBoard.makeMove(move, playerSymbol); // Creates a new board according to each possible move --> we search all these for the best one
+            max(newBoard, maxDepth - 1, playerSymbol); //CALL MIN OR MAX ??? depth is given by the player
 
-            /* 
+            int score = board.getEvaluation();
             if (score > maxScore) { //change the score according to computations made by utility_function() or evaluate()
                 maxScore = score;
                 bestMove = move;
             }
-            */
         }
-
         return bestMove;
     }
 	
-	public Move max(Board board, int depth) {return null;}
+	public Move max(Board board, int depth, int playerLetter) 
+    {    
+        return null;
+    }
 	
-	public Move min(Board board, int depth) {return null;}
+	public Move min(Board board, int depth, int playerLetter) 
+    {
+        return null;
+    }
 }

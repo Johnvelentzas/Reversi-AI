@@ -37,6 +37,8 @@ class Board
 	
 	private int dimension;
 
+    private int evaluation;
+
 
     /**
      * Default board constructor. Creates an {@code empty} board with the default dimentions
@@ -150,7 +152,7 @@ class Board
     */
     public int evaluate() 
     {
-        int totalPoints;
+        int h;
         int f1; //total player pawns on board - total opponent pawns
         int f2; //total player pawn safe on corners - the opponent's ones
         int f3; //total pawns not in corners - the opponent's ones
@@ -169,8 +171,8 @@ class Board
             f4 = NumberOfMoves2;        
         }
 
-        totalPoints = f1 + (3*f2) + (int)(java.lang.Math.floor(f3/2)) + (2*f4);
-        return totalPoints;
+        h = f1 + (3*f2) + (int)(java.lang.Math.floor(f3/2)) + (2*f4);
+        return h;
     }
 	
 	public boolean isTerminal() 
@@ -207,6 +209,16 @@ class Board
     public int getDimention() 
     {
         return this.dimension;
+    }
+
+    public void setEvaluation(int evaluation) 
+    {
+        this.evaluation = evaluation;
+    }
+
+    public int getEvaluation() 
+    {
+        return this.evaluation;
     }
 	
     /**

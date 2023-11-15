@@ -4,7 +4,7 @@ import java.awt.event.ItemListener;
 
 import javax.swing.*;
 
-public class SettingsPanel extends JPanel implements Config, ItemListener{
+public class settingsPanel extends JPanel implements Config, ItemListener{
     
     private Reversi parent;
 
@@ -19,7 +19,7 @@ public class SettingsPanel extends JPanel implements Config, ItemListener{
 
     private JCheckBox previewMove;
 
-    public SettingsPanel(Reversi parent){
+    public settingsPanel(Reversi parent){
         super(new GridBagLayout());
         this.parent = parent;
         this.setBackground(Config.BG_COLOR);

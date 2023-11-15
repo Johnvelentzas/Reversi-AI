@@ -57,7 +57,7 @@ public class Reversi extends JPanel implements ActionListener, Config{
 
     private MainMenu menuPanel;
     private InfoPanel infoPanel;
-    private SettingsPanel settingsPanel;
+    private settingsPanel settingsPanel;
     private ColorPanel colorPanel;
     private GamePanel gamePanel;
 
@@ -90,7 +90,7 @@ public class Reversi extends JPanel implements ActionListener, Config{
         this.infoPanel = new InfoPanel(this);
         this.colorPanel = new ColorPanel(this);
         this.gamePanel = new GamePanel(this);
-        this.settingsPanel = new SettingsPanel(this);
+        this.settingsPanel = new settingsPanel(this);
 
         this.add("menu", menuPanel);
         this.add("info", infoPanel);
