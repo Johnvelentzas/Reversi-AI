@@ -204,7 +204,6 @@ class Board
     {
         return this.gameBoard;
     }
-
     
     public int getDimention() 
     {
