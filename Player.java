@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-class Player
+public class Player
 {
 	private int maxDepth;
     private int playerLetter;
@@ -12,6 +12,11 @@ class Player
     {
         this.maxDepth = maxDepth;
         this.playerLetter = playerLetter;
+    }
+
+    public int getPlayerLetter()
+    {
+        return this.playerLetter;
     }
 
     public Move getMove(Board board){
@@ -51,7 +56,7 @@ class Player
     }
     
 	
-	public Move MiniMax(Board board) { //ΜΙΝΙΜΑΧ ΧΩΡΙΣ ΠΡΙΟΝΙΣΜΑ Α-Β
+	public Move MiniMax(Board board) { //no prunning
         int maxScore = -1000;
         Move bestMove = null;
         int playerSymbol = this.playerLetter;

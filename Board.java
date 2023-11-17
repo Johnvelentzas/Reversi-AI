@@ -3,7 +3,7 @@ import java.io.UncheckedIOException;
 import java.util.ArrayList;
 
 
-class Board
+public class Board
 {
 
 	public static final int W = 1;
@@ -219,6 +219,19 @@ class Board
     {
         return this.evaluation;
     }
+
+    /**
+     * Checks and compares the scores to find the winner of the game
+     * @param score1
+     * @param score2
+     * @return {@code -1} if player 2 has a higher score, {@code 1} if player 1 has a higher score, {@code 0} if they have the same score
+     */
+    public int findTheWinner(int score1, int score2)
+    {
+        if (score1 < score2) {return -1;}
+        else if (score1 > score2) {return 1;}
+        else {return 0;}   
+    }
 	
     /**
      * Checks if coordinates are within the bounds of the board.
@@ -303,7 +316,8 @@ class Board
 
     public String toString()
     {
-        String result = "Reversi|";
+
+        String result = "\nReversi|";
         for (int i = 0; i < gameBoard.length; i++) {
             result += i + "|";
         }
@@ -355,13 +369,16 @@ class Board
         this.lastMove = move;
         this.lastPlayer = playerLetter;
         ArrayList<Move> capturedPawns = this.capturedPawnsFrom(move, playerLetter);
+        /* 
         for (Move move2 : capturedPawns) {
             System.out.println(move2.toString());
         }
+        */
         if (playerLetter == PLAYER_1) {
             this.player1score += (capturedPawns.size() + 1);
             this.player2score -= (capturedPawns.size());
-        } else {
+        } 
+        else if (playerLetter == PLAYER_2) {
             this.player1score -= (capturedPawns.size());
             this.player2score += (capturedPawns.size() + 1);
         }
@@ -380,7 +397,11 @@ class Board
     }
 
 
-    
+    /**
+     * Applied to every state of the board in order to find every move a player can make
+     * @param playerLetter
+     * @return An array list with all the available moves for a specific player
+     */
     public ArrayList<Move> findPossibleMoves(int playerLetter) //returns an array list of all the possible moves for a specific player
     { 
         ArrayList<Move> possibleMoves = new ArrayList<>();
@@ -397,7 +418,7 @@ class Board
         if (playerLetter == 1) {
             this.NumberOfMoves1 = possibleMoves.size(); 
         }
-        else if (playerLetter == 2) {
+        else if (playerLetter == -1) {
             this.NumberOfMoves2 = possibleMoves.size();
         }
         
