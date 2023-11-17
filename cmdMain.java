@@ -10,8 +10,27 @@ public class cmdMain{
     //------------------------------------------- INITIALIZING GAME ------------------------------------------------ 
         boolean moveFound = false;
         int playerletter = pl.getPlayerLetter();
-        int score1 = board.getPlayer1Score();
-        int score2 = board.getPlayer2Score();
+
+        //TEMPORARY TO CALCULATE SCORE --> NOT EFFICIENT
+        int score1 = 0;
+        int score2 = 0;
+
+        for (int i = 0; i<board.getDimention(); i++) {
+            for (int j = 0; j<board.getDimention(); j++) {
+                if (board.getGameBoard()[i][j] == 1) {
+                    score1++;
+                }
+                else if (board.getGameBoard()[i][j] == -1) {
+                    score2++;
+                }
+            }
+        }
+        //TEMPORARY TO CALCULATE SCORE --> NOT EFFICIENT
+
+
+        //TO CALCULATE SCORE MORE EFFICIENTLY
+        //int score1 = board.getPlayer1Score();
+        //int score2 = board.getPlayer2Score();
 
         System.out.println("---------------------------------------------------------");
         System.out.println("\nPlayer1 score = " + score1 + "\tPlayer2 score = " + score2);

@@ -374,11 +374,11 @@ public class Board
             System.out.println(move2.toString());
         }
         */
-        if (playerLetter == PLAYER_1) {
+        if (playerLetter == 1) {
             this.player1score += (capturedPawns.size() + 1);
             this.player2score -= (capturedPawns.size());
         } 
-        else if (playerLetter == PLAYER_2) {
+        else if (playerLetter == -1) {
             this.player1score -= (capturedPawns.size());
             this.player2score += (capturedPawns.size() + 1);
         }
