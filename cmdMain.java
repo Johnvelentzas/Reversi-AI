@@ -2,17 +2,18 @@ import java.util.*;
 
 //TODO FIX THE SCORE
 //TODO MAKE THE AI AND FIND A WAY FOR THE PLAYER TO PLAY WITH THE COMPUTER
-//TODO THE PLAYER'S TURN ISN'T SKIPPED WHEN THERE AREN'T ANY MOVES
 public class cmdMain{
 
 
     public static void chooseAmove(Player pl, int maxDepth, Board board, int boardDimentions, boolean validInput, Scanner answer) {
         //System.out.println("\nchooseAmove method called for player: " + pl);
     //------------------------------------------- INITIALIZING GAME ------------------------------------------------ 
+        boolean moveFound = false;
         int playerletter = pl.getPlayerLetter();
         int score1 = board.getPlayer1Score();
         int score2 = board.getPlayer2Score();
 
+        System.out.println("---------------------------------------------------------");
         System.out.println("\nPlayer1 score = " + score1 + "\tPlayer2 score = " + score2);
         board.print();
 
@@ -20,14 +21,26 @@ public class cmdMain{
 
         System.out.println(playerPossibleMoves);
         if (pl.getPlayerLetter() == 1) {
-            System.out.println("\n~ Make your move PLAYER 1");
+            if (playerPossibleMoves.isEmpty()) {
+                System.out.println("\nNo available moves for player 1: TURN SKIPPED");
+                moveFound = true;
+            }
+            else {
+                System.out.println("\n~ Make your move PLAYER 1");
+            }
         }
         else if (pl.getPlayerLetter() == -1) {
-            System.out.println("\n~ Make your move PLAYER 2");
+            if (playerPossibleMoves.isEmpty()) {
+                System.out.println("\nNo available moves for player 2: TURN SKIPPED");
+                moveFound = true;
+            }
+            else {
+                System.out.println("\n~ Make your move PLAYER 2");
+            }
         }
 
     // ----------------------- CHOOSING A MOVE ----------------------------
-        boolean moveFound = false;
+
         while (!moveFound) {
             //--------------------------------- ROW ----------------------------------
             validInput = false;
@@ -87,7 +100,6 @@ public class cmdMain{
                 System.out.println(playerPossibleMoves);
             }
         }
-        board.print();
 
         if (board.isTerminal()) {
             int winner = board.findTheWinner(score1, score2);
