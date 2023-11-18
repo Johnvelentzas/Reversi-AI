@@ -138,7 +138,6 @@ public class Board
             // Add the new board state to the list of children
             children.add(childBoard);
         }
-
         return children;
     }
 

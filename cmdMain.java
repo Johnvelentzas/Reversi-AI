@@ -225,27 +225,6 @@ public class cmdMain{
             }
         }
             
-        /* 
-        else { //the user chose to play with CPU
-            System.out.println("\nYou chose to play with a CPU :)");
-            pl1 = new Player(maxDepth, 1); //create player1
-            pl2 = new Player(maxDepth, -1); //create player2 - AI
-        }
-       
-        while (!board.isTerminal()) {
-            int turn = 0;
-            if (turn % 2 == 0) {
-                chooseAmove(pl1, maxDepth, board, boardDimentions, false, answer);
-                System.out.println("\nOut of chooseAmove method for: " + pl1);
-                turn++;
-            }
-            else if (turn % 2 == 1) {
-                chooseAmove(pl2, maxDepth, board, boardDimentions, false, answer);
-                System.out.println("\nOut of chooseAmove method for: " + pl2);                
-                turn++;
-            }
-        }
-        */
         answer.close();
     } //Main
 
