@@ -5,7 +5,7 @@ import java.util.*;
 public class cmdMain{
 
 
-    public static void chooseAmove(Player pl, int maxDepth, Board board, int boardDimentions, boolean validInput, Scanner answer) {
+    public static void chooseAmove(Player pl, int maxDepth, Board board, int boardDimentions, boolean validInput, Scanner answer, boolean AI) {
         //System.out.println("\nchooseAmove method called for player: " + pl);
     //------------------------------------------- INITIALIZING GAME ------------------------------------------------ 
         boolean moveFound = false;
@@ -36,90 +36,105 @@ public class cmdMain{
         System.out.println("\nPlayer1 score = " + score1 + "\tPlayer2 score = " + score2);
         board.print();
 
-        ArrayList<Move> playerPossibleMoves = board.findPossibleMoves(playerletter);
+    //-------------------------------------- FOR PLAYERS NOT AI ----------------------------------------
+        if (!AI) {
+            ArrayList<Move> playerPossibleMoves = board.findPossibleMoves(playerletter);
 
-        System.out.println(playerPossibleMoves);
-        if (pl.getPlayerLetter() == 1) {
-            if (playerPossibleMoves.isEmpty()) {
-                System.out.println("\nNo available moves for player 1: TURN SKIPPED");
-                moveFound = true;
-            }
-            else {
-                System.out.println("\n~ Make your move PLAYER 1");
-            }
-        }
-        else if (pl.getPlayerLetter() == -1) {
-            if (playerPossibleMoves.isEmpty()) {
-                System.out.println("\nNo available moves for player 2: TURN SKIPPED");
-                moveFound = true;
-            }
-            else {
-                System.out.println("\n~ Make your move PLAYER 2");
-            }
-        }
-
-    // ----------------------- CHOOSING A MOVE ----------------------------
-
-        while (!moveFound) {
-            //--------------------------------- ROW ----------------------------------
-            validInput = false;
-            int chosenRow = 0;
-            while(!validInput) {
-                System.out.println("\n~ ROW:");
-                if (answer.hasNextInt()) {
-                    int ans = answer.nextInt();
-                    if (ans < boardDimentions && ans >= 0) {
-                        chosenRow = ans;
-                        validInput = true;
-                    }
-                    else {
-                        System.out.println("\n! Invalid row. Please try again.");
-                        answer.next();
-                    }
-                }
-                else {
-                    System.out.println("\n! Invalid row. Please try again.");
-                    answer.next();
-                }
-            }
-
-            //---------------------------------- COLUMN -----------------------------------
-            validInput = false;
-            int chosenCol = 0;
-            while (!validInput) {
-                System.out.println("\n~ COLUMN:");
-                if (answer.hasNextInt()) {
-                    int ans = answer.nextInt();
-                    if (ans < boardDimentions && ans >= 0) {
-                        chosenCol = ans;
-                        validInput = true;
-                    }
-                    else {
-                        System.out.println("\n! Invalid row. Please try again.");
-                        answer.next();
-                    }
-                }
-                else {
-                    System.out.println("\n! Invalid column. Please try again.");
-                    answer.next();
-                }
-            }
-
-            //------------------------------------------- MAKING THE MOVE ---------------------------------------------
-            Move playerMove = new Move(chosenRow, chosenCol);
-            for (Move move : playerPossibleMoves) {
-                if (playerMove.equals(move)) {  
-                    System.out.println("\n\nMOVE MADE!");
-                    board.makeMove(playerMove, playerletter);
+            System.out.println(playerPossibleMoves);
+            if (pl.getPlayerLetter() == 1) {
+                if (playerPossibleMoves.isEmpty()) {
+                    System.out.println("\nNo available moves for player 1: TURN SKIPPED");
                     moveFound = true;
                 }
+                else {
+                    System.out.println("\n~ Make your move PLAYER 1");
+                }
             }
-            if (!moveFound) {
-                System.out.println("\n\n! THIS MOVE IS NOT AVAILABLE. Please try again.\n");
-                System.out.println(playerPossibleMoves);
+            else if (pl.getPlayerLetter() == -1) {
+                if (playerPossibleMoves.isEmpty()) {
+                    System.out.println("\nNo available moves for player 2: TURN SKIPPED");
+                    moveFound = true;
+                }
+                else {
+                    System.out.println("\n~ Make your move PLAYER 2");
+                }
             }
+
+        // ----------------------- CHOOSING A MOVE ----------------------------
+
+            while (!moveFound) {
+                //--------------------------------- ROW ----------------------------------
+                validInput = false;
+                int chosenRow = 0;
+                while(!validInput) {
+                    System.out.println("\n~ ROW:");
+                    if (answer.hasNextInt()) {
+                        int ans = answer.nextInt();
+                        if (ans < boardDimentions && ans >= 0) {
+                            chosenRow = ans;
+                            validInput = true;
+                        }
+                        else {
+                            System.out.println("\n! Invalid row. Please try again.");
+                            answer.next();
+                        }
+                    }
+                    else {
+                        System.out.println("\n! Invalid row. Please try again.");
+                        answer.next();
+                    }
+                }
+
+                //---------------------------------- COLUMN -----------------------------------
+                validInput = false;
+                int chosenCol = 0;
+                while (!validInput) {
+                    System.out.println("\n~ COLUMN:");
+                    if (answer.hasNextInt()) {
+                        int ans = answer.nextInt();
+                        if (ans < boardDimentions && ans >= 0) {
+                            chosenCol = ans;
+                            validInput = true;
+                        }
+                        else {
+                            System.out.println("\n! Invalid row. Please try again.");
+                            answer.next();
+                        }
+                    }
+                    else {
+                        System.out.println("\n! Invalid column. Please try again.");
+                        answer.next();
+                    }
+                }
+
+                //------------------------------------------- MAKING THE MOVE ---------------------------------------------
+                Move playerMove = new Move(chosenRow, chosenCol);
+                for (Move move : playerPossibleMoves) {
+                    if (playerMove.equals(move)) {  
+                        System.out.println("\n\nMOVE MADE!");
+                        board.makeMove(playerMove, playerletter);
+                        moveFound = true;
+                    }
+                }
+                if (!moveFound) {
+                    System.out.println("\n\n! THIS MOVE IS NOT AVAILABLE. Please try again.\n");
+                    System.out.println(playerPossibleMoves);
+                }
+            }
+            playerPossibleMoves.clear();
+        }// FOR PLAYERS NOT AI ^
+
+    //------------------------------------------- FOR AI --------------------------------------------
+        else if (AI) {
+            //---------------------------------- CHOOSING A MOVE ----------------------------------------
+            int computerLetter = pl.getPlayerLetter();
+            
+
+            //---------------------------------- MAKING A MOVE -------------------------------------
         }
 
+
+        //----------------------------------- FINDING THE WINNER --------------------------------------
         if (board.isTerminal()) {
             int winner = board.findTheWinner(score1, score2);
             if (winner == 1) {
@@ -136,7 +151,7 @@ public class cmdMain{
             }
         }
 
-        playerPossibleMoves.clear();
+        
     }
 
 
@@ -200,8 +215,8 @@ public class cmdMain{
 
 //---------------------------------------- START GAME ---------------------------------------------------
         Board board = new Board(boardDimentions);
-        Player pl1;
-        Player pl2;
+        Player pl1 = new Player(maxDepth, 1); //create player1
+        Player pl2 = new Player(maxDepth, -1); //create player2
         int turn = 0;
 
         //------------------------------ CHOOSE THE PLAYERS -----------------------------
@@ -209,22 +224,55 @@ public class cmdMain{
 
         if (answer.hasNextInt() && answer.nextInt() == 0) { //the user chose to play with another human being
             System.out.println("\nYou chose to play with a friend :)");
-            pl1 = new Player(maxDepth, 1); //create player1
-            pl2 = new Player(maxDepth, -1); //create player2
             while (!board.isTerminal()) {
                 if (turn % 2 == 0) {
-                    chooseAmove(pl1, maxDepth, board, boardDimentions, false, answer);
+                    chooseAmove(pl1, maxDepth, board, boardDimentions, false, answer, false);
                     //System.out.println("\nOut of chooseAmove method for: " + pl1);
                     turn++;
                 }
                 else if (turn % 2 == 1) {
-                    chooseAmove(pl2, maxDepth, board, boardDimentions, false, answer);
+                    chooseAmove(pl2, maxDepth, board, boardDimentions, false, answer, false);
                     //System.out.println("\nOut of chooseAmove method for: " + pl2);                
                     turn++;
                 }
             }
         }
+        else {
+            System.out.println("\nYou chose to play with the computer :)");
+            Player computer = pl2; //the computer is now player2 (the user is player 1)
+            if (turn % 2 == 0) {
+                    chooseAmove(pl1, maxDepth, board, boardDimentions, false, answer, false);
+                    //System.out.println("\nOut of chooseAmove method for: " + pl1);
+                    turn++;
+                }
+                else if (turn % 2 == 1) {
+                    chooseAmove(pl2, maxDepth, board, boardDimentions, false, answer, true);
+                    //System.out.println("\nOut of chooseAmove method for: " + pl2);                
+                    turn++;
+                }
+        }
             
+        /* 
+        else { //the user chose to play with CPU
+            System.out.println("\nYou chose to play with a CPU :)");
+            pl1 = new Player(maxDepth, 1); //create player1
+            pl2 = new Player(maxDepth, -1); //create player2 - AI
+        }
+       
+        while (!board.isTerminal()) {
+            int turn = 0;
+            if (turn % 2 == 0) {
+                chooseAmove(pl1, maxDepth, board, boardDimentions, false, answer);
+                System.out.println("\nOut of chooseAmove method for: " + pl1);
+                turn++;
+            }
+            else if (turn % 2 == 1) {
+                chooseAmove(pl2, maxDepth, board, boardDimentions, false, answer);
+                System.out.println("\nOut of chooseAmove method for: " + pl2);                
+                turn++;
+            }
+        }
+        */
         answer.close();
     } //Main
 

@@ -73,7 +73,7 @@ public class Player
     {
         // Base case: If the depth limit is reached or it's a terminal state, evaluate the board and stop recursion
         if (depth == 0 || board.isTerminal()) {
-            board.setEvaluation(board.evaluate()); // Evaluate the current board state
+            board.setEvaluation(utility_Funtion(board)); // Evaluate the current board state
             return null; // Return null as no move needs to be made at this stage
         }
     
@@ -93,7 +93,8 @@ public class Player
                     maxScore = score; 
                     bestMove = childBoard.getLastMove(); // Get the move associated with the best child board
                 }
-            } else {
+            } 
+            else {
                 // If the current player is PLAYER_2 (minimizing player)
                 MiniMax(childBoard, depth - 1, Board.PLAYER_1); // Recursively call MiniMax for the opponent (PLAYER_1)
                 int score = childBoard.getEvaluation(); // Get the evaluation score from the opponent's move
@@ -108,7 +109,8 @@ public class Player
         // Update the board evaluation based on the best move found
         if (playerLetter == Board.PLAYER_1) {
             board.setEvaluation(maxScore); // Set the board's evaluation to the maximum score found
-        } else {
+        } 
+        else {
             board.setEvaluation(minScore); // Set the board's evaluation to the minimum score found
         }
     
