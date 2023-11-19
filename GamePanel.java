@@ -179,7 +179,8 @@ public class GamePanel extends JPanel implements ActionListener, Config
         Icon icon;
         if (this.parent.activePlayerLetter == -1) {
             icon = new ImageIcon(this.parent.PLAYER1PAWN);
-        } else {
+        } 
+        else {
             icon = new ImageIcon(this.parent.PLAYER2PAWN);
         }
         for (Move pawn : this.parent.previewPawns) {
@@ -201,7 +202,8 @@ public class GamePanel extends JPanel implements ActionListener, Config
         if (this.parent.activePlayerInput == PlayerTag.AI) {
             this.parent.nextMove = this.parent.activePlayerAI.getMove(this.parent.board);
             this.placeMove();
-        } else {
+        } 
+        else {
             this.updatePosibleMoves();
         }
     }
@@ -215,17 +217,20 @@ public class GamePanel extends JPanel implements ActionListener, Config
             this.victoryLabel.setText("Player 1 won!");
             if (this.parent.player1Tag == PlayerTag.AI && this.parent.player2Tag == PlayerTag.human) {
                 this.parent.AIScore ++;
-            } else if(this.parent.player1Tag == PlayerTag.human && this.parent.player2Tag == PlayerTag.AI){
+            } 
+            else if (this.parent.player1Tag == PlayerTag.human && this.parent.player2Tag == PlayerTag.AI) {
                 this.parent.humanScore ++;
             }
-        } else if(this.parent.board.getPlayer1Score() < this.parent.board.getPlayer2Score()){
+        } else if(this.parent.board.getPlayer1Score() < this.parent.board.getPlayer2Score()) {
             this.victoryLabel.setText("Player 2 won!");
             if (this.parent.player2Tag == PlayerTag.AI && this.parent.player1Tag == PlayerTag.human) {
                 this.parent.AIScore++;
-            } else if(this.parent.player2Tag == PlayerTag.human && this.parent.player1Tag == PlayerTag.AI){
+            } 
+            else if (this.parent.player2Tag == PlayerTag.human && this.parent.player1Tag == PlayerTag.AI) {
                 this.parent.humanScore++;
             }
-        }else{
+        }
+        else {
             this.victoryLabel.setText("It's a tie!");
         }
         this.add(this.victoryLabel, this.victoryLabelConstraints);
