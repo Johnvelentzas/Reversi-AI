@@ -30,8 +30,8 @@ public class Reversi extends JPanel implements ActionListener, Config{
     protected ArrayList<Move> previewPawns;
     protected Move nextMove;
 
-    protected int dim = Board.DEFAULT_DIMENTION;
-    protected int maxDepth = Board.DEFAULT_MAX_DEPTH;
+    protected int dim = DEFAULT_DIM;
+    protected int maxDepth = DEFAULT_DEPTH;
     protected String currPanel = "menu";
     protected String lastPanel = "menu";
     protected int humanScore = 0;

@@ -26,9 +26,6 @@ public class Board
     public int NumberOfMoves1;
     public int NumberOfMoves2;
 
-    public static final int DEFAULT_DIMENTION = 8;
-    public static final int DEFAULT_MAX_DEPTH = 4;
-
     private int[][] gameBoard;
 
     private int lastPlayer;
@@ -45,7 +42,7 @@ public class Board
      */
     public Board() 
     {
-        create_board(DEFAULT_DIMENTION);
+        create_board(Config.DEFAULT_DIM);
     }
 	
     /**

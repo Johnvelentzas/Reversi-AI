@@ -94,8 +94,8 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         this.parent.activePlayerInput = this.parent.player1Tag;
         this.parent.activePlayerLetter = Board.PLAYER_1;
         this.parent.activePlayerLabel = "Player 1";
-        this.parent.player1 = new Player(Board.DEFAULT_MAX_DEPTH, Board.PLAYER_1);
-        this.parent.player2 = new Player(Board.DEFAULT_MAX_DEPTH, Board.PLAYER_2);
+        this.parent.player1 = new Player(this.parent.maxDepth, Board.PLAYER_1);
+        this.parent.player2 = new Player(this.parent.maxDepth, Board.PLAYER_2);
         this.gameGrid = new JButton[this.parent.dim][this.parent.dim];
         this.innerPanel.removeAll();
         this.gridPanel = new JPanel(new GridLayout(this.parent.dim, this.parent.dim));
