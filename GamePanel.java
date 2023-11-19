@@ -29,7 +29,6 @@ public class GamePanel extends JPanel implements ActionListener, Config{
 
 
     public void updateLabels(){
-        System.out.println(this.parent.board.getPlayer1Score());
         this.humanScoreLabel.setText("Player 1: " + this.parent.board.getPlayer1Score());
         this.AIScoreLabel.setText(this.parent.board.getPlayer2Score() + " : Player 2");
         this.activePlayer.setText(this.parent.activePlayerLabel);
@@ -124,7 +123,7 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         this.nextMove();
     }
 
-    public synchronized void updatePawns(){
+    public void updatePawns(){
         for (int i = 0; i < this.parent.dim; i++) {
             for (int j = 0; j < this.parent.dim; j++) {
                 switch (this.parent.board.getPawn(i, j)) {
@@ -169,7 +168,6 @@ public class GamePanel extends JPanel implements ActionListener, Config{
     }
 
     private void nextMove(){
-        System.out.println(this.parent.activePlayerInput);
         if (this.parent.board.isTerminal()) {
             finishGame();
         }
@@ -186,11 +184,11 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         }
     }
 
-    private synchronized void finishGame(){
+    private void finishGame(){
 
     }
 
-    private synchronized void placeMove(){
+    private void placeMove(){
         this.removePosibleMoves();
         this.parent.board.makeMove(this.parent.nextMove, this.parent.activePlayerLetter);
         this.changePlayer();
@@ -199,7 +197,7 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         this.nextMove();
     }
 
-    private synchronized void changePlayer(){
+    private void changePlayer(){
         if (this.parent.activePlayer == 1) {
             this.parent.activePlayer = 2;
             this.parent.activePlayerInput = this.parent.player2Tag;
