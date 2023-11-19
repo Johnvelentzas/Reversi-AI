@@ -1,7 +1,8 @@
 import java.awt.*;
 import javax.swing.*;
 
-public class ColorPanel extends JPanel implements Config{
+public class ColorPanel extends JPanel implements Config
+{
 
     private Reversi parent;
 
@@ -14,7 +15,8 @@ public class ColorPanel extends JPanel implements Config{
     private GridBagConstraints titleConstraints;
     private GridBagConstraints colorConstraints;
 
-    public ColorPanel(Reversi parent){
+    public ColorPanel(Reversi parent)
+    {
         super(new GridBagLayout());
         this.parent = parent;
         this.setBackground(Config.BG_COLOR);
@@ -42,7 +44,8 @@ public class ColorPanel extends JPanel implements Config{
         this.add(this.scrollColor, this.colorConstraints);
     }
 
-    public void updateLabel(){
+    public void updateLabel()
+    {
         this.title.setText("Choose color for player " + this.parent.colorSelection);
     }
 }

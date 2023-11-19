@@ -15,7 +15,8 @@ public class InfoPanel extends JPanel implements Config{
     private GridBagConstraints titleConstraints;
     private GridBagConstraints infoConstraints;
 
-    public InfoPanel(Reversi parent){
+    public InfoPanel (Reversi parent)
+    {
         super(new GridBagLayout());
         this.parent = parent;
         this.setBackground(Config.BG_COLOR);

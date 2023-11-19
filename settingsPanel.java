@@ -4,7 +4,8 @@ import java.awt.event.ItemListener;
 
 import javax.swing.*;
 
-public class settingsPanel extends JPanel implements Config, ItemListener{
+public class settingsPanel extends JPanel implements Config, ItemListener
+{
     
     private Reversi parent;
 
@@ -19,7 +20,8 @@ public class settingsPanel extends JPanel implements Config, ItemListener{
 
     private JCheckBox previewMove;
 
-    public settingsPanel(Reversi parent){
+    public settingsPanel(Reversi parent)
+    {
         super(new GridBagLayout());
         this.parent = parent;
         this.setBackground(Config.BG_COLOR);
@@ -54,10 +56,12 @@ public class settingsPanel extends JPanel implements Config, ItemListener{
     }
 
     @Override
-    public void itemStateChanged(ItemEvent e) {
+    public void itemStateChanged(ItemEvent e) 
+    {
         if (this.previewMove.isSelected()) {
             this.parent.previewMove = true;
-        } else {
+        } 
+        else {
             this.parent.previewMove = false;
         }
     }

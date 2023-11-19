@@ -5,7 +5,8 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-public class GamePanel extends JPanel implements ActionListener, Config{
+public class GamePanel extends JPanel implements ActionListener, Config
+{
     
     private boolean activeGame;
 
@@ -32,13 +33,15 @@ public class GamePanel extends JPanel implements ActionListener, Config{
     private GridBagConstraints victoryLabelConstraints;
 
 
-    public void updateLabels(){
+    public void updateLabels()
+    {
         this.humanScoreLabel.setText("Player 1: " + this.parent.board.getPlayer1Score());
         this.AIScoreLabel.setText(this.parent.board.getPlayer2Score() + " : Player 2");
         this.activePlayer.setText(this.parent.activePlayerLabel);
     }
 
-    public GamePanel(Reversi parent){
+    public GamePanel(Reversi parent)
+    {
         super(new GridBagLayout());
         this.parent = parent;
         this.parent.board = new Board();
@@ -95,7 +98,8 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         this.victoryLabel.setFont(Config.SETTINGS_FONT);
     }
 
-    public void setupNewGame(){
+    public void setupNewGame()
+    {
         this.parent.board = new Board(this.parent.dim);
         this.parent.posibleMoves = new ArrayList<>();
         this.parent.previewPawns = new ArrayList<>();
@@ -126,7 +130,8 @@ public class GamePanel extends JPanel implements ActionListener, Config{
 
         if (this.parent.previewMove) {
             this.add(this.placePawn, this.placePawnConstraints);
-        }else{
+        }
+        else {
             this.remove(this.placePawn);
         }
         this.updatePawns();
@@ -134,7 +139,8 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         this.nextMove();
     }
 
-    public void updatePawns(){
+    public void updatePawns()
+    {
         for (int i = 0; i < this.parent.dim; i++) {
             for (int j = 0; j < this.parent.dim; j++) {
                 switch (this.parent.board.getPawn(i, j)) {
@@ -154,19 +160,22 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         }
     }
 
-    public void updatePosibleMoves(){
+    public void updatePosibleMoves()
+    {
         for (Move pawn : this.parent.posibleMoves) {
             this.gameGrid[pawn.getRow()][pawn.getCol()].setIcon(new ImageIcon(this.parent.POSIBLE_MOVE));
         }
     }
 
-    public void removePosibleMoves(){
+    public void removePosibleMoves()
+    {
         for (Move pawn : this.parent.posibleMoves) {
             this.gameGrid[pawn.getRow()][pawn.getCol()].setIcon(new ImageIcon(this.parent.EMPTY_PAWN));
         }
     }
 
-    public void updatePreviewPawns(){
+    public void updatePreviewPawns()
+    {
         Icon icon;
         if (this.parent.activePlayerLetter == -1) {
             icon = new ImageIcon(this.parent.PLAYER1PAWN);
@@ -178,7 +187,8 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         }
     }
 
-    private void nextMove(){
+    private void nextMove()
+    {
         if (this.parent.board.isTerminal()) {
             finishGame();
             return;
@@ -196,7 +206,8 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         }
     }
 
-    private void finishGame(){
+    private void finishGame()
+    {
         this.updatePawns();
         this.updateLabels();
         this.activeGame = false;
@@ -220,7 +231,8 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         this.add(this.victoryLabel, this.victoryLabelConstraints);
     }
 
-    private void placeMove(){
+    private void placeMove()
+    {
         this.removePosibleMoves();
         this.parent.board.makeMove(this.parent.nextMove, this.parent.activePlayerLetter);
         this.changePlayer();
@@ -229,7 +241,8 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         this.nextMove();
     }
 
-    private void changePlayer(){
+    private void changePlayer()
+    {
         if (this.parent.activePlayer == 1) {
             this.parent.activePlayer = 2;
             this.parent.activePlayerInput = this.parent.player2Tag;

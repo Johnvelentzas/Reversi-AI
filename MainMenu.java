@@ -1,7 +1,8 @@
 import java.awt.*;
 import javax.swing.*;
 
-public class MainMenu extends JPanel implements Config{
+public class MainMenu extends JPanel implements Config
+{
 
     private Reversi parent;
     
@@ -37,7 +38,8 @@ public class MainMenu extends JPanel implements Config{
     private GridBagConstraints goToSettingsConstraints;
     private GridBagConstraints goToInfoConstraints;
 
-    public void updateLabels(){
+    public void updateLabels()
+    {
         this.humanScoreLabel.setText("Human: " + this.parent.humanScore);
         this.AIScoreLabel.setText(this.parent.AIScore + " :AI");
         this.dimDisplay.setText("" + this.parent.dim);
@@ -45,7 +47,8 @@ public class MainMenu extends JPanel implements Config{
         this.player2Button.setText(this.parent.player2Name);
     }
 
-    public MainMenu(Reversi parent){
+    public MainMenu(Reversi parent)
+    {
         super(new GridBagLayout());
         this.parent = parent;
         this.setBackground(Config.BG_COLOR);
