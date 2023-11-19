@@ -19,11 +19,15 @@ public class Player
         return this.playerLetter;
     }
 
-    public Move getMove(Board board)
+    public Move getRandomMove(Board board)
     {
         ArrayList<Move> moves = board.findPossibleMoves(this.playerLetter);
         Random rand = new Random();
         return moves.get(rand.nextInt(moves.size()));
+    }
+
+    public Move getMove(Board board){
+        return this.MiniMax(board, maxDepth, playerLetter);
     }
 
 

@@ -13,6 +13,11 @@ public interface Config {
 
     public static final int MIN_DIM = 6;
     public static final int MAX_DIM = 18;
+    public static final int DEFAULT_DIM = 8;
+
+    public static final int MIN_DEPTH = 2;
+    public static final int MAX_DEPTH = 8;
+    public static final int DEFAULT_DEPTH = 4;
 
     public static final int BORDER_WIDTH = 2;
 

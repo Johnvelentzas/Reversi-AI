@@ -27,7 +27,7 @@ public class Board
     public int NumberOfMoves2;
 
     public static final int DEFAULT_DIMENTION = 8;
-    public static final int DEFAULT_MAX_DEPTH = 8;
+    public static final int DEFAULT_MAX_DEPTH = 4;
 
     private int[][] gameBoard;
 
