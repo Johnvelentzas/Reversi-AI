@@ -323,9 +323,11 @@ public int evaluate()
         this.lastMove = move;
         this.lastPlayer = playerLetter;
         ArrayList<Move> capturedPawns = this.capturedPawnsFrom(move, playerLetter);
+
         for (Move move2 : capturedPawns) {
             System.out.println(move2.toString());
         }
+
         if (playerLetter == PLAYER_1) {
             this.player1score += (capturedPawns.size() + 1);
             this.player2score -= (capturedPawns.size());
@@ -333,9 +335,11 @@ public int evaluate()
             this.player1score -= (capturedPawns.size());
             this.player2score += (capturedPawns.size() + 1);
         }
+
         for (Move capture : capturedPawns) {
             this.gameBoard[capture.getRow()][capture.getCol()] = playerLetter;
         }
+
         this.gameBoard[move.getRow()][move.getCol()] = playerLetter;
 
         //increase counter of edge pawns (used in evaluate() function)
@@ -421,18 +425,6 @@ public int evaluate()
         int row = move.getRow();
         int col = move.getCol();
 
-        //check left edge
-        if (col == 0) {return true;}
-
-        //check right edge
-        else if (col == this.dimension) {return true;}
-
-        //check up edge
-        else if (row == 0) {return true;}
-
-        //check down edge
-        else if (row == this.dimension) {return true;}
-
-        else {return false;}
+        return col == 0 || col == this.dimension || row == 0 || row == this.dimension;
     }
 }
