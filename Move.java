@@ -147,6 +147,6 @@ public class Move
 
     @Override
     public String toString(){
-        return "row: " + this.row + ", column: " + this.col;
+        return "(" + this.row + "," + this.col + ")";
     }
 }
