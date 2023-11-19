@@ -1,6 +1,4 @@
 import java.util.*;
-
-//TODO FIX THE SCORE
 //TODO MAKE THE AI AND FIND A WAY FOR THE PLAYER TO PLAY WITH THE COMPUTER
 public class cmdMain{
 
@@ -76,7 +74,6 @@ public class cmdMain{
                         }
                         else {
                             System.out.println("\n! Invalid row. Please try again.");
-                            answer.next();
                         }
                     }
                     else {
@@ -97,8 +94,7 @@ public class cmdMain{
                             validInput = true;
                         }
                         else {
-                            System.out.println("\n! Invalid row. Please try again.");
-                            answer.next();
+                            System.out.println("\n! Invalid column. Please try again.");
                         }
                     }
                     else {
@@ -164,30 +160,9 @@ public class cmdMain{
         System.out.println("\n\n\t\t | WELCOME TO REVERSI |");
         Scanner answer = new Scanner(System.in);        
 
-//--------------------------------------------- MAX DEPTH ----------------------------------------------
-        int DEFAULT_MAX_DEPTH = 8;
-        boolean validInput = false;
-        int maxDepth = DEFAULT_MAX_DEPTH;
-        while (!validInput) { // Keep asking for input until a valid integer is entered
-            System.out.print("\n\nPlease give the desirable max depth for your opponent's skills in reversi (chose 0 for the default depth): ");
-            if (answer.hasNextInt()) {
-                maxDepth = answer.nextInt();
-                if (maxDepth == 0 || maxDepth < 0) {
-                    maxDepth = DEFAULT_MAX_DEPTH;
-                    validInput = true;
-                }
-                validInput = true;
-            }
-            else {
-                System.out.println("\n! Invalid depth. Please try again.");
-                answer.next();
-            }
-        }
-        //System.out.println("\n~The max depth you chose is " + maxDepth);
-
 //------------------------------------------- BOARD DIMENTION ------------------------------------------------
         int DEFAULT_DIMENTION = 8;
-        validInput = false;
+        boolean validInput = false;
         int boardDimentions = DEFAULT_DIMENTION;
         while (!validInput) { // Keep asking for input until a valid integer is entered
             System.out.print("\n\nPlease give the board's dimentions (Integer) from 6x6 to 20x20 (chose anything else for the default dimentions): ");
@@ -210,7 +185,32 @@ public class cmdMain{
         }
         //System.out.println("\n~The board's dimentions you chose is " + boardDimentions);
 
-
+//--------------------------------------------- MAX DEPTH ----------------------------------------------
+        validInput = false;
+        int DEFAULT_MAX_DEPTH = 8;
+        int maxDepth = DEFAULT_MAX_DEPTH;
+        while (!validInput) { // Keep asking for input until a valid integer is entered
+            System.out.print("\n\nPlease give the desirable max depth for your opponent's skills in reversi (chose 0 for the default depth): ");
+            if (answer.hasNextInt()) {
+                maxDepth = answer.nextInt();
+                if (maxDepth == 0 || maxDepth < 0) {
+                    maxDepth = DEFAULT_MAX_DEPTH;
+                    System.out.println(maxDepth);
+                    validInput = true;
+                }
+                else if (maxDepth > ((boardDimentions*boardDimentions) - 4)) { //the max depth of the tree made in MINIMAX depends on the case where the whole board if full on pawns.
+                    maxDepth = (boardDimentions*boardDimentions) - 4;          //That can happen if the right moves are made and they can amount to the board's available spots at the start of the game --> boardDimentions^2 - 4
+                    System.out.println(maxDepth);
+                    validInput = true;
+                }
+                validInput = true;
+            }
+            else {
+                System.out.println("\n! Invalid depth. Please try again.");
+                answer.next();
+            }
+        }
+        //System.out.println("\n~The max depth you chose is " + maxDepth);
 
 
 //---------------------------------------- START GAME ---------------------------------------------------
@@ -246,7 +246,7 @@ public class cmdMain{
                     turn++;
                 }
                 else if (turn % 2 == 1) {
-                    chooseAmove(pl2, maxDepth, board, boardDimentions, false, answer, true);
+                    chooseAmove(computer, maxDepth, board, boardDimentions, false, answer, true);
                     //System.out.println("\nOut of chooseAmove method for: " + pl2);                
                     turn++;
                 }

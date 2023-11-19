@@ -26,6 +26,15 @@ public class Player
         return moves.get(rand.nextInt(moves.size()));
     }
 
+
+    /**
+     * function to be used in Minimax algorithm to evaluate a moves outcome 
+     * for a player in order to know if it's best to hoose it or not
+     * 
+     * @param board The current board state
+     * @return evaluation of the actual score for the player (playerPieces-opponentPieces) 
+     *         or an estimated evaluation using evaluate() function in Board.java
+     */
     private int utility_Funtion(Board board) 
     { //to be used in minimax algorithm after checking for terminal states
         int playerLetter = board.getLastPlayer();
@@ -74,12 +83,12 @@ public class Player
         // Base case: If the depth limit is reached or it's a terminal state, evaluate the board and stop recursion
         if (depth == 0 || board.isTerminal()) {
             board.setEvaluation(utility_Funtion(board)); // Evaluate the current board state
-            return null; // Return null as no move needs to be made at this stage
+            return new Move(); // Return new Move() with no value as no move needs to be made at this stage
         }
     
         int maxScore = Integer.MIN_VALUE; // Initialize the maximum score for the maximizing player
         int minScore = Integer.MAX_VALUE; // Initialize the minimum score for the minimizing player
-        Move bestMove = null; // Keep track of the best move found
+        Move bestMove = new Move(); // Keep track of the best move found
     
         ArrayList<Board> children = board.getChildren(playerLetter); // Get children boards for the current player
     
@@ -117,40 +126,4 @@ public class Player
         return bestMove; // Return the best move found at the root level
     }
     
-	/* 
-	public Move MiniMax(Board board) { //no prunning
-        int maxScore = -1000;
-        Move bestMove = null;
-        int playerSymbol = this.playerLetter;
-        ArrayList<Move> possibleMoves = board.findPossibleMoves(playerLetter);
-
-        for (Move move : possibleMoves) {
-            Board newBoard = new Board(board); // Create a copy of the current board
-
-            // TODO USE getChildren METHOD TO FIND ALL POSIBLE MOVES 
-            ArrayList<Board> children = newBoard.getChildren(playerSymbol);
-
-            newBoard.makeMove(move, playerSymbol); // Creates a new board according to each possible move --> we search all these for the best one
-            max(newBoard, maxDepth - 1, playerSymbol); //CALL MIN OR MAX ??? depth is given by the player
-
-            int score = board.getEvaluation();
-            if (score > maxScore) { //change the score according to computations made by utility_function() or evaluate()
-                maxScore = score;
-                bestMove = move;
-            }
-        }
-        return bestMove;
-    }
-	
-	public Move max(Board board, int depth, int playerLetter) 
-    {    
-        return null;
-    }
-	
-	public Move min(Board board, int depth, int playerLetter) 
-    {
-        return null;
-    }
-*/
-
 }
