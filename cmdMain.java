@@ -1,34 +1,13 @@
 import java.util.*;
-//TODO MAKE THE AI AND FIND A WAY FOR THE PLAYER TO PLAY WITH THE COMPUTER
-public class cmdMain{
+public class cmdMain implements Config { 
 
 
     public static void chooseAmove(Player pl, int maxDepth, Board board, int boardDimentions, boolean validInput, Scanner answer, boolean AI) {
-        //System.out.println("\nchooseAmove method called for player: " + pl);
     //------------------------------------------- INITIALIZING GAME ------------------------------------------------ 
         boolean moveFound = false;
         int playerletter = pl.getPlayerLetter();
-
-        //TEMPORARY TO CALCULATE SCORE --> NOT EFFICIENT
-        int score1 = 0;
-        int score2 = 0;
-
-        for (int i = 0; i<board.getDimention(); i++) {
-            for (int j = 0; j<board.getDimention(); j++) {
-                if (board.getGameBoard()[i][j] == 1) {
-                    score1++;
-                }
-                else if (board.getGameBoard()[i][j] == -1) {
-                    score2++;
-                }
-            }
-        }
-        //TEMPORARY TO CALCULATE SCORE --> NOT EFFICIENT
-
-        //TO CALCULATE SCORE MORE EFFICIENTLY
-        //int score1 = board.getPlayer1Score();
-        //int score2 = board.getPlayer2Score();
-
+        int score1 = board.getPlayer1Score();
+        int score2 = board.getPlayer2Score();
         System.out.println("---------------------------------------------------------");
         System.out.println("\nPlayer1 score = " + score1 + "\tPlayer2 score = " + score2);
         board.print();
@@ -64,7 +43,7 @@ public class cmdMain{
                 validInput = false;
                 int chosenRow = 0;
                 while(!validInput) {
-                    System.out.println("\n~ ROW:");
+                    System.out.print("\n~ ROW: ");
                     if (answer.hasNextInt()) {
                         int ans = answer.nextInt();
                         if (ans < boardDimentions && ans >= 0) {
@@ -72,11 +51,11 @@ public class cmdMain{
                             validInput = true;
                         }
                         else {
-                            System.out.println("\n! Invalid row. Please try again.");
+                            System.out.print("\n! Invalid row. Please try again --> ");
                         }
                     }
                     else {
-                        System.out.println("\n! Invalid row. Please try again.");
+                        System.out.print("\n! Invalid row. Please try again --> ");
                         answer.next();
                     }
                 }
@@ -85,7 +64,7 @@ public class cmdMain{
                 validInput = false;
                 int chosenCol = 0;
                 while (!validInput) {
-                    System.out.println("\n~ COLUMN:");
+                    System.out.print("\n~ COLUMN: ");
                     if (answer.hasNextInt()) {
                         int ans = answer.nextInt();
                         if (ans < boardDimentions && ans >= 0) {
@@ -93,11 +72,11 @@ public class cmdMain{
                             validInput = true;
                         }
                         else {
-                            System.out.println("\n! Invalid column. Please try again.");
+                            System.out.print("\n! Invalid column. Please try again --> ");
                         }
                     }
                     else {
-                        System.out.println("\n! Invalid column. Please try again.");
+                        System.out.print("\n! Invalid column. Please try again --> ");
                         answer.next();
                     }
                 }
@@ -121,12 +100,23 @@ public class cmdMain{
 
     //------------------------------------------- FOR AI --------------------------------------------
         else if (AI) {
+            ArrayList<Move> computerPossibleMoves = board.findPossibleMoves(playerletter);
+            System.out.println(computerPossibleMoves);
+
+            if (computerPossibleMoves.isEmpty()) {
+                System.out.println("\nNo available moves for computer: TURN SKIPPED");
+            }
             //---------------------------------- CHOOSING A MOVE ----------------------------------------
-            int computerLetter = pl.getPlayerLetter();
-            
+            else {
+                Move computerMove = pl.MiniMax(board, maxDepth, playerletter);
+                System.out.println("\n\n ! The computer placed a pawn at " + computerMove.toString());
 
             //---------------------------------- MAKING A MOVE -------------------------------------
-        }
+                board.makeMove(computerMove, playerletter); 
+            }
+            
+            computerPossibleMoves.clear();
+        }// FOR ΑΙ ^
 
 
         //----------------------------------- FINDING THE WINNER --------------------------------------
@@ -144,9 +134,8 @@ public class cmdMain{
                 System.out.println("\n\n\t\t IT'S A TIE!");
                 System.exit(0);
             }
-        }
-
-        
+            board.print();
+        }  
     }
 
 
@@ -160,19 +149,14 @@ public class cmdMain{
         Scanner answer = new Scanner(System.in);        
 
 //------------------------------------------- BOARD DIMENTION ------------------------------------------------
-        int DEFAULT_DIMENTION = 8;
         boolean validInput = false;
-        int boardDimentions = DEFAULT_DIMENTION;
+        int boardDimentions = DEFAULT_DIM;
         while (!validInput) { // Keep asking for input until a valid integer is entered
-            System.out.print("\n\nPlease give the board's dimentions (Integer) from 6x6 to 20x20 (chose anything else for the default dimentions): ");
+            System.out.print("\n\nPlease give the board's dimentions (Integer) from 6x6 to 18x18 (chose anything else for the default dimentions): ");
             if (answer.hasNextInt()) {
                 boardDimentions = answer.nextInt();
-                if (boardDimentions < 6) {
-                    boardDimentions = DEFAULT_DIMENTION;
-                    validInput = true;
-                }
-                if (boardDimentions > 20) {
-                    boardDimentions = 20;
+                if (boardDimentions < MIN_DIM || boardDimentions > MAX_DIM) {
+                    boardDimentions = DEFAULT_DIM;
                     validInput = true;
                 }
                 validInput = true;
@@ -189,19 +173,21 @@ public class cmdMain{
         int DEFAULT_MAX_DEPTH = 8;
         int maxDepth = DEFAULT_MAX_DEPTH;
         while (!validInput) { // Keep asking for input until a valid integer is entered
-            System.out.print("\n\nPlease give the desirable max depth for your opponent's skills in reversi (chose 0 for the default depth): ");
+            System.out.print("\n\nPlease give the desirable max depth for your opponent's skills in reversi (from 2 to 8) (any other key for the default depth): ");
             if (answer.hasNextInt()) {
                 maxDepth = answer.nextInt();
-                if (maxDepth == 0 || maxDepth < 0) {
-                    maxDepth = DEFAULT_MAX_DEPTH;
-                    System.out.println(maxDepth);
+                if (maxDepth < 2 || maxDepth > 8) {
+                    maxDepth = DEFAULT_DEPTH;
+                    //System.out.println(maxDepth);
                     validInput = true;
                 }
+                /*
                 else if (maxDepth > ((boardDimentions*boardDimentions) - 4)) { //the max depth of the tree made in MINIMAX depends on the case where the whole board if full on pawns.
                     maxDepth = (boardDimentions*boardDimentions) - 4;          //That can happen if the right moves are made and they can amount to the board's available spots at the start of the game --> boardDimentions^2 - 4
                     System.out.println(maxDepth);
                     validInput = true;
                 }
+                */
                 validInput = true;
             }
             else {
@@ -217,61 +203,47 @@ public class cmdMain{
         Player pl1 = new Player(maxDepth, 1); //create player1
         Player pl2 = new Player(maxDepth, -1); //create player2
         int turn = 0;
+        boolean validChoice = false;
 
         //------------------------------ CHOOSE THE PLAYERS -----------------------------
-        System.out.print("\n\nDo you want to play with another player? (press 0 if YES - press any other key to play with the computer): ");
+        System.out.print("\n\nDo you want to play with another player? (press 0 if YES - press any other Integer to play with the computer): ");
 
-        if (answer.hasNextInt() && answer.nextInt() == 0) { //the user chose to play with another human being
-            System.out.println("\nYou chose to play with a friend :)");
-            while (!board.isTerminal()) {
-                if (turn % 2 == 0) {
-                    chooseAmove(pl1, maxDepth, board, boardDimentions, false, answer, false);
-                    //System.out.println("\nOut of chooseAmove method for: " + pl1);
-                    turn++;
+        while (!validChoice) {
+            if (answer.hasNextInt()) { 
+                int ans = answer.nextInt();
+                if (ans == 0) { //the user chose to play with another human being
+                    System.out.println("\nYou chose to play with a friend :)");
+                    validChoice = true;
+                    while (!board.isTerminal()) {
+                        if (turn % 2 == 0) {
+                            chooseAmove(pl1, maxDepth, board, boardDimentions, false, answer, false);
+                            turn++;
+                        }
+                        else if (turn % 2 == 1) {
+                            chooseAmove(pl2, maxDepth, board, boardDimentions, false, answer, false);
+                            turn++;
+                        }
+                    }
                 }
-                else if (turn % 2 == 1) {
-                    chooseAmove(pl2, maxDepth, board, boardDimentions, false, answer, false);
-                    //System.out.println("\nOut of chooseAmove method for: " + pl2);                
-                    turn++;
+                else if (ans != 0) { //the user chose to play against the computer
+                    System.out.println("\nYou chose to play with the computer :)");
+                    Player computer = pl2; //the computer is now player2 (the user is player 1)
+                    validChoice = true;
+                    while (!board.isTerminal()) {
+                        if (turn % 2 == 0) {
+                            chooseAmove(pl1, maxDepth, board, boardDimentions, false, answer, false);
+                            turn++;
+                        }
+                        else if (turn % 2 == 1) {
+                            chooseAmove(computer, maxDepth, board, boardDimentions, false, answer, true);
+                            turn++;
+                        }
+                    }    
                 }
             }
+            System.out.print("\n ! Invalid choice: please choose an Integer (0 for player2, any other for computer) --> ");
+            answer.next();
         }
-        else {
-            System.out.println("\nYou chose to play with the computer :)");
-            Player computer = pl2; //the computer is now player2 (the user is player 1)
-            if (turn % 2 == 0) {
-                    chooseAmove(pl1, maxDepth, board, boardDimentions, false, answer, false);
-                    //System.out.println("\nOut of chooseAmove method for: " + pl1);
-                    turn++;
-                }
-                else if (turn % 2 == 1) {
-                    chooseAmove(computer, maxDepth, board, boardDimentions, false, answer, true);
-                    //System.out.println("\nOut of chooseAmove method for: " + pl2);                
-                    turn++;
-                }
-        }
-            
-        /* 
-        else { //the user chose to play with CPU
-            System.out.println("\nYou chose to play with a CPU :)");
-            pl1 = new Player(maxDepth, 1); //create player1
-            pl2 = new Player(maxDepth, -1); //create player2 - AI
-        }
-       
-        while (!board.isTerminal()) {
-            int turn = 0;
-            if (turn % 2 == 0) {
-                chooseAmove(pl1, maxDepth, board, boardDimentions, false, answer);
-                System.out.println("\nOut of chooseAmove method for: " + pl1);
-                turn++;
-            }
-            else if (turn % 2 == 1) {
-                chooseAmove(pl2, maxDepth, board, boardDimentions, false, answer);
-                System.out.println("\nOut of chooseAmove method for: " + pl2);                
-                turn++;
-            }
-        }
-        */
         answer.close();
     } //Main
 

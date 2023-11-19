@@ -48,7 +48,7 @@ public class Board
     /**
      * Basic board constructor. Creates an {@code empty} board with the given dimentions.
      * 
-     * @param dim   x and y dimention.
+     * @param dim x and y dimention.
      */
 	public Board(int dimentions) 
     {
@@ -99,13 +99,14 @@ public class Board
 
     public String toString()
     {
-        String result = "\nReversi|";
+        String result = "\nReversi |";
         for (int i = 0; i < gameBoard.length; i++) {
             result += i + "|";
         }
         result += "\n";
         for (int i = 0; i < gameBoard.length; i++) {
-            result += "      " + i + "|";
+            if (i >= 0 && i < 10) {result += "       " + i + "|";}
+            else if (i >= 10) {result += "      " + i + "|";}
             for (int j = 0; j < gameBoard.length; j++) {
                 switch (this.gameBoard[i][j]) {
                     case EMPTY:
@@ -203,7 +204,7 @@ public class Board
 
     /**    
     * Get children of the current board state for a specific player.
-
+    *
     * @param playerLetter The player for whom to generate children.
     * @return A list of Board objects representing the possible children.
     */
