@@ -259,7 +259,8 @@ public class GamePanel extends JPanel implements ActionListener, Config
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) 
+    {
         if (!this.activeGame) {
             return;
         }
