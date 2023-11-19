@@ -63,8 +63,8 @@ public class Reversi extends JPanel implements ActionListener, Config{
 
     public CardLayout layout;
 
-    public Reversi(){
-
+    public Reversi()
+    {
         try {
             Reversi.colorImg = ImageIO.read(new File("img/color.png"));
             Reversi.downImg = ImageIO.read(new File("img/down.png"));
@@ -79,7 +79,8 @@ public class Reversi extends JPanel implements ActionListener, Config{
             this.EMPTY_PAWN = ImageIO.read(new File("Pawns/empty.png"));
             this.POSIBLE_MOVE = ImageIO.read(new File("img/add.png"));
 
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             System.out.println("Could not find all image resurces.");
         }
 
@@ -100,12 +101,14 @@ public class Reversi extends JPanel implements ActionListener, Config{
         layout.show(this, "menu");
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) 
+    {
         SwingUtilities.invokeLater(() -> {
             try {
                 UIManager.setLookAndFeel(
                 UIManager.getSystemLookAndFeelClassName());
-            } catch (Exception e) {
+            } 
+            catch (Exception e) {
                 System.out.println("Could not load System UI");
             }
 
@@ -120,7 +123,8 @@ public class Reversi extends JPanel implements ActionListener, Config{
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) 
+    {
         switch (e.getActionCommand()) {
             case "goToInfo":
                 this.lastPanel = this.currPanel;
@@ -168,7 +172,8 @@ public class Reversi extends JPanel implements ActionListener, Config{
                 if (this.player2Tag == PlayerTag.human) {
                     this.player2Tag = PlayerTag.AI;
                     this.player2Name = "AI";
-                }else{
+                }
+                else{
                     this.player2Tag = PlayerTag.human;
                     this.player2Name = "Human";
                 }
