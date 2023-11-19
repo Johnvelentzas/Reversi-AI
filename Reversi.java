@@ -151,7 +151,7 @@ public class Reversi extends JPanel implements ActionListener, Config{
                 this.dim -= 1;
                 this.menuPanel.updateLabels();
                 break;
-            case "toggle1": 
+/*             case "toggle1": 
                 if (this.player1Tag == PlayerTag.human) {
                     this.player1Tag = PlayerTag.AI;
                     this.activePlayerInput = PlayerTag.AI;
@@ -162,7 +162,7 @@ public class Reversi extends JPanel implements ActionListener, Config{
                     this.player1Name = "Human";
                 }
                 this.menuPanel.updateLabels();
-                break;
+                break;*/
             case "toggle2": 
                 if (this.player2Tag == PlayerTag.human) {
                     this.player2Tag = PlayerTag.AI;
