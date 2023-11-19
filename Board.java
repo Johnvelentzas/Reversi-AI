@@ -495,11 +495,6 @@ public class Board
         this.lastMove = move;
         this.lastPlayer = playerLetter;
         ArrayList<Move> capturedPawns = this.capturedPawnsFrom(move, playerLetter);
-        /* 
-        for (Move move2 : capturedPawns) {
-            System.out.println(move2.toString());
-        }
-        */
         if (playerLetter == 1) {
             this.player1score += (capturedPawns.size() + 1);
             this.player2score -= (capturedPawns.size());

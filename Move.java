@@ -70,7 +70,7 @@ public class Move
             case SouthEast:
                 return this.southEast();
             case SouthWest:
-                return this.southEast();
+                return this.southWest();
             case West:
                 return this.west();
             default:
