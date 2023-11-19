@@ -353,7 +353,7 @@ public class Board
 	
 	public boolean isTerminal() 
     {
-        return this.findPossibleMoves(PLAYER_1).isEmpty() && this.findPossibleMoves(PLAYER_2).isEmpty();
+        return (this.findPossibleMoves(PLAYER_1).isEmpty() && this.findPossibleMoves(PLAYER_2).isEmpty());
     }
 
 

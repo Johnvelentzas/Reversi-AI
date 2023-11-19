@@ -130,6 +130,7 @@ public class Reversi extends JPanel implements ActionListener, Config{
             case "goToMenu":
                 this.lastPanel = this.currPanel;
                 this.currPanel = "menu";
+                this.menuPanel.updateLabels();
                 layout.show(this, "menu");
                 break;
             case "goToSettings":

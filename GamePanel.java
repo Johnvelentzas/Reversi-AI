@@ -7,6 +7,8 @@ import javax.swing.*;
 
 public class GamePanel extends JPanel implements ActionListener, Config{
     
+    private boolean activeGame;
+
     private Reversi parent;
     
     private JButton goToMainMenu;
@@ -18,6 +20,7 @@ public class GamePanel extends JPanel implements ActionListener, Config{
     private JPanel gridPanel;
     private JButton[][] gameGrid;
     private JButton placePawn;
+    private JLabel victoryLabel;
 
     private GridBagConstraints goToMainMenuConstraints;
     private GridBagConstraints humanScoreLabelConstraints;
@@ -26,6 +29,7 @@ public class GamePanel extends JPanel implements ActionListener, Config{
     private GridBagConstraints goToInfoConstraints;
     private GridBagConstraints innerPanelConstraints;
     private GridBagConstraints placePawnConstraints;
+    private GridBagConstraints victoryLabelConstraints;
 
 
     public void updateLabels(){
@@ -53,6 +57,8 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         this.innerPanelConstraints = new GridBagConstraints(0, 1, 5, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0);
 
         this.placePawnConstraints = new GridBagConstraints(0, 2, 5, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(10, 0, 10, 0), 0, 0);
+
+        this.victoryLabelConstraints = new GridBagConstraints(0, 3, 5, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(10, 0, 10, 0), 0, 0);
 
         this.goToMainMenu = new JButton(new ImageIcon(Reversi.menuImg));
         this.goToMainMenu.addActionListener(this.parent);
@@ -84,6 +90,9 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         this.placePawn.setFont(Config.SETTINGS_FONT);
         this.placePawn.addActionListener(this);
         this.placePawn.setActionCommand("place");
+
+        this.victoryLabel = new JLabel();
+        this.victoryLabel.setFont(Config.SETTINGS_FONT);
     }
 
     public void setupNewGame(){
@@ -100,6 +109,8 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         this.innerPanel.removeAll();
         this.gridPanel = new JPanel(new GridLayout(this.parent.dim, this.parent.dim));
         this.innerPanel.add(this.gridPanel, BorderLayout.CENTER);
+        this.remove(this.victoryLabel);
+        this.activeGame = true;
 
         for (int i = 0; i < gameGrid.length; i++) {
             for (int j = 0; j < gameGrid[i].length; j++) {
@@ -143,19 +154,19 @@ public class GamePanel extends JPanel implements ActionListener, Config{
         }
     }
 
-    public synchronized void updatePosibleMoves(){
+    public void updatePosibleMoves(){
         for (Move pawn : this.parent.posibleMoves) {
             this.gameGrid[pawn.getRow()][pawn.getCol()].setIcon(new ImageIcon(this.parent.POSIBLE_MOVE));
         }
     }
 
-    public synchronized void removePosibleMoves(){
+    public void removePosibleMoves(){
         for (Move pawn : this.parent.posibleMoves) {
             this.gameGrid[pawn.getRow()][pawn.getCol()].setIcon(new ImageIcon(this.parent.EMPTY_PAWN));
         }
     }
 
-    public synchronized void updatePreviewPawns(){
+    public void updatePreviewPawns(){
         Icon icon;
         if (this.parent.activePlayerLetter == -1) {
             icon = new ImageIcon(this.parent.PLAYER1PAWN);
@@ -170,6 +181,7 @@ public class GamePanel extends JPanel implements ActionListener, Config{
     private void nextMove(){
         if (this.parent.board.isTerminal()) {
             finishGame();
+            return;
         }
         this.parent.posibleMoves = this.parent.board.findPossibleMoves(this.parent.activePlayerLetter);
         if (this.parent.posibleMoves.isEmpty()) {
@@ -185,7 +197,27 @@ public class GamePanel extends JPanel implements ActionListener, Config{
     }
 
     private void finishGame(){
-
+        this.updatePawns();
+        this.updateLabels();
+        this.activeGame = false;
+        if (this.parent.board.getPlayer1Score() > this.parent.board.getPlayer2Score()) {
+            this.victoryLabel.setText("Player 1 won!");
+            if (this.parent.player1Tag == PlayerTag.AI && this.parent.player2Tag == PlayerTag.human) {
+                this.parent.AIScore ++;
+            } else if(this.parent.player1Tag == PlayerTag.human && this.parent.player2Tag == PlayerTag.AI){
+                this.parent.humanScore ++;
+            }
+        } else if(this.parent.board.getPlayer1Score() < this.parent.board.getPlayer2Score()){
+            this.victoryLabel.setText("Player 2 won!");
+            if (this.parent.player2Tag == PlayerTag.AI && this.parent.player1Tag == PlayerTag.human) {
+                this.parent.AIScore++;
+            } else if(this.parent.player2Tag == PlayerTag.human && this.parent.player1Tag == PlayerTag.AI){
+                this.parent.humanScore++;
+            }
+        }else{
+            this.victoryLabel.setText("It's a tie!");
+        }
+        this.add(this.victoryLabel, this.victoryLabelConstraints);
     }
 
     private void placeMove(){
@@ -215,6 +247,9 @@ public class GamePanel extends JPanel implements ActionListener, Config{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (!this.activeGame) {
+            return;
+        }
         if (e.getActionCommand() == "place") {
             if (this.parent.previewMove) {
                 placeMove();
