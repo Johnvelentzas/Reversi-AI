@@ -25,7 +25,6 @@ public class cmdMain{
         }
         //TEMPORARY TO CALCULATE SCORE --> NOT EFFICIENT
 
-
         //TO CALCULATE SCORE MORE EFFICIENTLY
         //int score1 = board.getPlayer1Score();
         //int score2 = board.getPlayer2Score();

@@ -180,14 +180,26 @@ public class Board
         return this.dimension;
     }
 
+    public int getEvaluation() 
+    {
+        return this.evaluation;
+    }
+
     public void setEvaluation(int evaluation) 
     {
         this.evaluation = evaluation;
     }
-
-    public int getEvaluation() 
+    
+    void setLastMove(Move lastMove)
     {
-        return this.evaluation;
+        this.lastMove.setRow(lastMove.getRow());
+        this.lastMove.setCol(lastMove.getCol());
+        this.lastMove.setValue(lastMove.getValue());
+    }
+
+    void setLastPlayer(int lastPlayer)
+    {
+        this.lastPlayer = lastPlayer;
     }
 
 
@@ -233,18 +245,6 @@ public class Board
                 this.gameBoard[i][j] = gameBoard[i][j];
             }
         }
-    }
-
-    void setLastMove(Move lastMove)
-    {
-        this.lastMove.setRow(lastMove.getRow());
-        this.lastMove.setCol(lastMove.getCol());
-        this.lastMove.setValue(lastMove.getValue());
-    }
-
-    void setLastPlayer(int lastPlayer)
-    {
-        this.lastPlayer = lastPlayer;
     }
 
 
@@ -346,7 +346,7 @@ public class Board
     public int getPawn(Move move) 
     {
         if (!isMoveInBoard(move)) {
-            System.out.println("ERROR: WRONG COORDINATES GIVEN");
+            System.out.println("ERROR: WRONG MOVE GIVEN");
             System.exit(0);
         }
         return this.gameBoard[move.getRow()][move.getCol()];
@@ -449,7 +449,8 @@ public class Board
             }
             if (this.getPawn(move) == playerLetter) {
                 return capturedPawns;
-            }else{
+            }
+            else {
                 capturedPawns.add(move);
             }
         }
