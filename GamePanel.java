@@ -240,9 +240,8 @@ public class GamePanel extends JPanel implements ActionListener, Config
     {
         this.removePosibleMoves();
         this.parent.board.makeMove(this.parent.nextMove, this.parent.activePlayerLetter);
-        this.changePlayer();
         this.updatePawns();
-        this.updateLabels();
+        this.changePlayer();
         this.nextMove();
     }
 
@@ -261,6 +260,7 @@ public class GamePanel extends JPanel implements ActionListener, Config
             this.parent.activePlayerLabel = "Player 1";
             this.parent.activePlayerAI = this.parent.player1;
         }
+        this.updateLabels();
     }
 
     @Override
